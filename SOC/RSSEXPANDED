@@ -1,884 +1,803 @@
 <apex:page controller="rssFeed">
-    <html lang="en">
-
-    <head>
-        <title>Bootstrap demo</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-            integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-            crossorigin="anonymous" />
-        <style>
-            * {
-                box-sizing: border-box;
-            }
-
-            html {
-                font-size: 14px;
-            }
-
-            .info {
-                display: flex;
-                padding: 1rem;
-            }
-
-            .imgTag {
-                height: 6rem;
-                width: 9rem;
-                cursor: pointer;
-                overflow: hidden;
-            }
-
-            .imgCls {
-                height: -webkit-fill-available;
-                width: inherit;
-            }
-
-            .divOne {
-                width: -webkit-fill-available;
-            }
-
-            body {
-                background: #f6f9fc;
-                font-family: "Open Sans", sans-serif;
-                color: #525f7f;
-            }
-
-            h2 {
-                margin: 5%;
-                text-align: center;
-                font-size: 2rem;
-                font-weight: 100;
-            }
-
-            .paraTag {
-                display: flex;
-                justify-content: center;
-            }
-
-            .spinner-border {
-                color: lightgrey;
-            }
-
-            div#spinnerloader {
-                color: lightgray;
-            }
-
-            .timeline {
-                display: flex;
-                flex-direction: column;
-                margin: 20px auto;
-                position: relative;
-                background-color: white;
-            }
-
-            .timeline.scroll {
-                margin: 4px, 4px;
-                padding: 4px;
-                background-color: white;
-                width: 30vw;
-                height: 110px;
-                overflow-x: hidden;
-                overflow-y: auto;
-                text-align: justify;
-            }
-
-            .timeline__event {
-                margin-bottom: 20px;
-                position: relative;
-                display: flex;
-                margin: 20px 0;
-                border-radius: 6px;
-                align-self: center;
-                width: 30vw;
-            }
-
-            .timeline__event:nth-child(n + 1) {
-                flex-direction: row-reverse;
-            }
-
-            .timeline__event:nth-child(n + 1) .timeline__event__date {
-                border-radius: 0 6px 6px 0;
-            }
-
-            .timeline__event:nth-child(n + 1) .timeline__event__content {
-                border-radius: 6px 0 0 6px;
-            }
-
-            .timeline__event:nth-child(n + 1) .timeline__event__icon:before {
-                content: "";
-                width: 2px;
-                height: 100%;
-                background: #f6a4ec;
-                position: absolute;
-                top: 0%;
-                left: 50%;
-                right: auto;
-                z-index: -1;
-                transform: translateX(-50%);
-                -webkit-animation: fillTop 2s forwards 4s ease-in-out;
-                animation: fillTop 2s forwards 4s ease-in-out;
-            }
-
-            .timeline__event:nth-child(n + 1) .timeline__event__icon:after {
-                content: "";
-                width: 100%;
-                height: 2px;
-                background: #f6a4ec;
-                position: absolute;
-                right: 0;
-                z-index: -1;
-                top: 50%;
-                left: auto;
-                transform: translateY(-50%);
-                -webkit-animation: fillLeft 2s forwards 4s ease-in-out;
-                animation: fillLeft 2s forwards 4s ease-in-out;
-            }
-
-            .timeline__event__title {
-                font-size: 1.2rem;
-                line-height: 1.4;
-                text-transform: uppercase;
-                font-weight: 600;
-                color: #9251ac;
-                letter-spacing: 1.5px;
-            }
-
-            .timeline__event__content {
-                padding: 20px;
-                box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3), 0 -12px 36px -8px rgba(0, 0, 0, 0.025);
-                background: #fff;
-                width: calc(40vw - 84px);
-                border-radius: 0 6px 6px 0;
-            }
-
-            .timeline__event__date {
-                color: #f6a4ec;
-                font-size: 1.5rem;
-                font-weight: 600;
-                background: #9251ac;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                white-space: nowrap;
-                padding: 0 20px;
-                border-radius: 6px 0 0 6px;
-            }
-
-            .timeline__event__icon {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #9251ac;
-                padding: 20px;
-                align-self: center;
-                margin: 0 20px;
-                background: #f6a4ec;
-                border-radius: 100%;
-                width: 40px;
-                box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3), 0 -12px 36px -8px rgba(0, 0, 0, 0.025);
-                padding: 40px;
-                height: 40px;
-                position: relative;
-            }
-
-            .timeline__event__icon i {
-                font-size: 32px;
-            }
-
-            .timeline__event__icon:before {
-                content: "";
-                width: 2px;
-                height: 100%;
-                background: #f6a4ec;
-                position: absolute;
-                top: 0%;
-                z-index: -1;
-                left: 50%;
-                transform: translateX(-50%);
-                -webkit-animation: fillTop 2s forwards 4s ease-in-out;
-                animation: fillTop 2s forwards 4s ease-in-out;
-            }
-
-            .timeline__event__icon:after {
-                content: "";
-                width: 100%;
-                height: 2px;
-                background: #f6a4ec;
-                position: absolute;
-                left: 0%;
-                z-index: -1;
-                top: 50%;
-                transform: translateY(-50%);
-                -webkit-animation: fillLeftOdd 2s forwards 4s ease-in-out;
-                animation: fillLeftOdd 2s forwards 4s ease-in-out;
-            }
-
-            .timeline__event__description {
-                flex-basis: 60%;
-            }
-
-            .timeline__event--type2:after {
-                background: #555ac0;
-            }
-
-            .timeline__event--type2 .timeline__event__date {
-                color: #87bbfe;
-                background: #555ac0;
-            }
-
-            .timeline__event--type2:nth-child(n + 1) .timeline__event__icon:before,
-            .timeline__event--type2:nth-child(n + 1) .timeline__event__icon:after {
-                background: #87bbfe;
-            }
-
-            .timeline__event--type2 .timeline__event__icon {
-                background: #87bbfe;
-                color: #555ac0;
-            }
-
-            .timeline__event--type2 .timeline__event__icon:before,
-            .timeline__event--type2 .timeline__event__icon:after {
-                background: #87bbfe;
-            }
-
-            .timeline__event--type2 .timeline__event__title {
-                color: #555ac0;
-            }
-
-            .timeline__event--type3:after {
-                background: #24b47e;
-            }
-
-            .timeline__event--type3 .timeline__event__date {
-                color: #aff1b6;
-                background-color: #24b47e;
-            }
-
-            .timeline__event--type3:nth-child(n + 1) .timeline__event__icon:before,
-            .timeline__event--type3:nth-child(nn + 1) .timeline__event__icon:after {
-                background: #aff1b6;
-            }
-
-            .timeline__event--type3 .timeline__event__icon {
-                background: #aff1b6;
-                color: #24b47e;
-            }
-
-            .timeline__event--type3 .timeline__event__icon:before,
-            .timeline__event--type3 .timeline__event__icon:after {
-                background: #aff1b6;
-            }
-
-            .timeline__event--type3 .timeline__event__title {
-                color: #24b47e;
-            }
-
-            .timeline__event:last-child .timeline__event__icon:before {
-                content: none;
-            }
-
-            @media (max-width: 786px) {
-                .timeline__event {
-                    flex-direction: column;
-                    align-self: center;
-                }
-
-                .timeline__event__content {
-                    width: 100%;
-                }
-
-                .timeline__event__icon {
-                    border-radius: 6px 6px 0 0;
-                    width: 100%;
-                    margin: 0;
-                    box-shadow: none;
-                }
-
-                .timeline__event__icon:before,
-                .timeline__event__icon:after {
-                    display: none;
-                }
-
-                .timeline__event__date {
-                    border-radius: 0;
-                    padding: 20px;
-                }
-
-                .timeline__event:nth-child(n + 1) {
-                    flex-direction: column;
-                    align-self: center;
-                }
-
-                .timeline__event:nth-child(n + 1) .timeline__event__date {
-                    border-radius: 0;
-                    padding: 20px;
-                }
-
-                .timeline__event:nth-child(n + 1) .timeline__event__icon {
-                    border-radius: 6px 6px 0 0;
-                    margin: 0;
-                }
-            }
-
-            @-webkit-keyframes fillLeft {
-                100% {
-                    right: 100%;
-                }
-            }
-
-            @keyframes fillLeft {
-                100% {
-                    right: 100%;
-                }
-            }
-
-            @-webkit-keyframes fillTop {
-                100% {
-                    top: 100%;
-                }
-            }
-
-            @keyframes fillTop {
-                100% {
-                    top: 100%;
-                }
-            }
-
-            @-webkit-keyframes fillLeftOdd {
-                100% {
-                    left: 100%;
-                }
-            }
-
-            @keyframes fillLeftOdd {
-                100% {
-                    left: 100%;
-                }
-            }
-
-            .switch {
-                position: relative;
-                display: inline-block;
-                width: 32px;
-                height: 16px;
-            }
-
-            .switch input {
-                opacity: 0;
-                width: 0;
-                height: 0;
-            }
-
-            .slider {
-                position: absolute;
-                cursor: pointer;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: #ccc;
-                -webkit-transition: 0.4s;
-                transition: 0.4s;
-                box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-            }
-
-            .sliderOne {
-                position: absolute;
-                cursor: pointer;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: #cdd7dd !important;
-                -webkit-transition: 0.4s;
-                transition: 0.4s;
-                box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-            }
-
-            .slider:before {
-                position: absolute;
-                content: "";
-                height: 16px;
-                width: 16px;
-                left: 0px;
-                bottom: 0px;
-                background-color: #116da3;
-                -webkit-transition: 0.4s;
-                transition: 0.4s;
-                box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-            }
-
-            .sliderOne:before {
-                position: absolute;
-                content: "";
-                height: 16px;
-                width: 16px;
-                left: 0px;
-                bottom: 0px;
-                background-color: #868b8e;
-                -webkit-transition: 0.4s;
-                transition: 0.4s;
-                box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-            }
-
-            input:checked+.slider {
-                background-color: #b2d4e4;
-            }
-
-            input:focus+.slider {
-                box-shadow: 0 0 1px #2196f3;
-            }
-
-            input:checked+.slider:before {
-                -webkit-transform: translateX(16px);
-                -ms-transform: translateX(16px);
-                transform: translateX(16px);
-            }
-
-            input:checked+.sliderOne {
-                background-color: #b2d4e4;
-            }
-
-            input:focus+.sliderOne {
-                box-shadow: 0 0 1px #2196f3;
-            }
-
-            input:checked+.sliderOne:before {
-                -webkit-transform: translateX(16px);
-                -ms-transform: translateX(16px);
-                transform: translateX(16px);
-            }
-
-            /* Rounded sliders */
-            .slider.round {
-                border-radius: 14px;
-            }
-
-            .sliderOne.round {
-                border-radius: 14px;
-            }
-
-            .slider.round:before {
-                border-radius: 50%;
-            }
-
-            .sliderOne.round:before {
-                border-radius: 50%;
-            }
-
-            .aTag {
-                text-decoration: none;
-                color: black;
-            }
-
-            .aTag:hover {
-                text-decoration: none;
-                color: black;
-            }
-
-            .card {
-                margin-top: 6px;
-                margin-bottom: 6px;
-            }
-
-            .divBtn {
-                display: flex;
-                flex-direction: row-reverse;
-            }
-
-            #outerId {
-                height: 200px;
-                overflow-y: scroll;
-            }
-
-            @media screen and (min-width: 20px) and (max-width: 424px) {
-                #outerId {
-                    height: 200px;
-                    overflow-y: scroll;
-                }
-
-                .switchCss {
-                    z-index: 2;
-                    margin-left: 75px;
-                    margin-top: -76px;
-                }
-
-                .timeline {
-                    margin-top: -11px;
-                }
-
-                .togglecss {
-                    margin-top: -18px;
-                }
-
-                .subHeading {
-                    margin-top: -15px;
-                }
-            }
-
-            @media screen and (min-width: 425px) and (max-width: 768px) {
-                .imgTag {
-                    margin-left: -18px;
-                    height: 6rem;
-                    width: 9rem;
-                    cursor: pointer;
-                    overflow: hidden;
-                }
-
-                #outerId {
-                    height: 200px;
-                    overflow-y: scroll;
-                }
-
-                .switchCss {
-                    z-index: 2;
-                    margin-left: 75px;
-                    margin-top: -76px;
-                }
-
-                .timeline {
-                    margin-top: -11px;
-                }
-
-                .togglecss {
-                    margin-top: -18px;
-                }
-
-                .subHeading {
-                    margin-top: -15px;
-                }
-            }
-
-            @media screen and (min-width: 1024px) and (max-width: 1440px) {
-                p#remove-me {
-                    margin-top: -15px;
-                    background-color: white;
-                    width: 98%;
-                }
-
-                #outerId {
-                    height: 89vh !important;
-                    overflow-y: scroll;
-                }
-
-                html.ext-strict {
-                    overflow-y: hidden;
-                }
-
-                .switch {
-                    width: 32px;
-                    height: 16px;
-                    margin-top: -40px;
-                    margin-left: 71px;
-                }
-
-                .imgTag {
-                    float: right;
-                }
-
-                .timeline {
-                    margin-top: 0px;
-                }
-
-                .info {
-                    margin-bottom: -24px;
-                }
-
-                div#spinnerloader {
-                    background-color: white;
-                    position: absolute;
-                    width: 98%;
-                    bottom: 0px;
-                }
-            }
-
-            @media screen and (min-width: 1441px) {
-                p#remove-me {
-                    margin-top: -20px;
-                    background-color: white;
-                    width: 99%;
-                }
-
-                #outerId {
-                    height: 95vh !important;
-                    overflow-y: scroll;
-                }
-
-                .switch {
-                    width: 32px;
-                    height: 16px;
-                    margin-top: -40px;
-                    margin-left: 71px;
-                }
-
-                html.ext-strict {
-                    overflow-y: hidden;
-                }
-
-                .imgTag {
-                    float: right;
-                }
-
-                .timeline {
-                    margin-top: 0px;
-                }
-
-                .info {
-                    margin-bottom: -24px;
-                }
-
-                div#spinnerloader {
-                    background-color: white;
-                    position: absolute;
-                    width: 99%;
-                    bottom: 4px;
-                }
-            }
-
-            .showHide {
-                float: right;
-                margin-top: 5px;
-            }
-
-            .paraTags {
-                position: absolute;
-                bottom: 1rem;
-                width: 100%;
-                text-align: center;
-            }
-
-            p {
-                margin-bottom: 1px;
-            }
-
-            #remove_me {
-                background-color: white;
-            }
-        </style>
-    </head>
-
-    <body class="outerIdd">
-        <div class="timeline">
-            <div class="row">
-                <div class="col">
-                    <p><b> Rss Feed - Mobile </b></p>
-                </div>
-                <div class="col">
-                    <div class="divBtn">
-                        <apex:form >
-                            <apex:commandButton value="Back" action="{!backButton}" />
-                        </apex:form>
-                    </div>
-                </div>
-            </div>
-            <div id="dataContainer">
-                <div class="outer" id="outerId" onscroll="scrollContainer()"></div>
-                <div class="d-flex justify-content-center d-none loaderTag" id="spinnerloader">
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <script>
-        
-            let offset = 0;
-            var url = new URL(window.location.href);
-            var id = url.searchParams.get("id");
-            var appLogoUrl;
-            var checkResultData;
-        
-            rssFeed.getAppLogoUrl(id, function (result, event) {
-                if (event.status) {
-                    appLogoUrl = result[0].App_Logo__c;
-                }
-            });
-        
-            var elements = document.getElementsByClassName("outer");
-            fetchRssFeed();
-        
-            function fetchRssFeed() {
-                var url = new URL(window.location.href);
-                var id = url.searchParams.get("id");
-                rssFeed.getFeed(id, offset, function (result, event) {
-                    
-                    var data = [result];       // Array of data to be loaded
-                    var currentIndex = 0;     // Index of data currently displayed
-                    var loadSize = 10;       // Number of data items to be loaded at a time
-
-                    if (event.status) {
-                        var Data = result;
-                        checkResultData = result;
-                        //console.log('Result: ', Data);
-
-                        for (let i = 0; i < result.length; i++) {
-                            let heading = result[i].Title;
-                            //let feedDate = result[i].Date;
-                            //let date = new Date(feedDate);
-                            //let day = date.getDate();
-                            //let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", 
-                            // "September", "October", "November", "December"];
-                            //let month = date.getMonth();
-                            //let monthName = monthNames[month];
-                            //let mName = monthName.substring(0, 3);
-                            //let createdDate = mName + " " + day;
-                            // heading = heading.substring(0, 95) + '...';
-                            let webName = result[i].Link;
-                            let siteName = webName.split("//")[1].split("/")[0];
-                            let subHeading;
-                            let media = result[i].Media;
-                            let imgId = result[i].Id;
-                            let description = result[i].Description;
-                            let descriptionUrl = description.split(";");
-                            let src = descriptionUrl[4];
-                            let Enable_RSS_Feed = result[i].Enable_RSS_Feed;
-                            let Synced_To_DB = result[i].Synced_To_DB;
-                            let creator = result[i].Creator;
-
-                            let StrDesc = String(description);
-                            let divCont = document.createElement('div');
-                            divCont.innerHTML = StrDesc;
-
-                            let decodedString = divCont.textContent.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#039;/g, "'");
-                            let tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = decodedString;
-                            let textDesc = tempDiv.textContent;
+	<html lang="en">
+
+	<head>
+		<title>Bootstrap demo</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+		<style>
+		* {
+			box-sizing: border-box;
+		}
+		
+		html {
+			font-size: 14px;
+		}
+		
+		.info {
+			display: flex;
+			padding: 1rem;
+		}
+		
+		.imgTag {
+			height: 6rem;
+			width: 9rem;
+			cursor: pointer;
+			overflow: hidden;
+		}
+		
+		.imgCls {
+			height: -webkit-fill-available;
+			width: inherit;
+		}
+		
+		.divOne {
+			width: -webkit-fill-available;
+		}
+		
+		body {
+			background: #f6f9fc;
+			font-family: "Open Sans", sans-serif;
+			color: #525f7f;
+		}
+		
+		h2 {
+			margin: 5%;
+			text-align: center;
+			font-size: 2rem;
+			font-weight: 100;
+		}
+		
+		.paraTag {
+			display: flex;
+			justify-content: center;
+		}
+		
+		.spinner-border {
+			color: lightgrey;
+		}
+		
+		div#spinnerloader {
+			color: lightgray;
+		}
+		
+		.timeline {
+			display: flex;
+			flex-direction: column;
+			margin: 20px auto;
+			position: relative;
+			background-color: white;
+		}
+		
+		.timeline.scroll {
+			margin: 4px, 4px;
+			padding: 4px;
+			background-color: white;
+			width: 30vw;
+			height: 110px;
+			overflow-x: hidden;
+			overflow-y: auto;
+			text-align: justify;
+		}
+		
+		.timeline__event {
+			margin-bottom: 20px;
+			position: relative;
+			display: flex;
+			margin: 20px 0;
+			border-radius: 6px;
+			align-self: center;
+			width: 30vw;
+		}
+		
+		.timeline__event:nth-child(n + 1) {
+			flex-direction: row-reverse;
+		}
+		
+		.timeline__event:nth-child(n + 1) .timeline__event__date {
+			border-radius: 0 6px 6px 0;
+		}
+		
+		.timeline__event:nth-child(n + 1) .timeline__event__content {
+			border-radius: 6px 0 0 6px;
+		}
+		
+		.timeline__event:nth-child(n + 1) .timeline__event__icon:before {
+			content: "";
+			width: 2px;
+			height: 100%;
+			background: #f6a4ec;
+			position: absolute;
+			top: 0%;
+			left: 50%;
+			right: auto;
+			z-index: -1;
+			transform: translateX(-50%);
+			-webkit-animation: fillTop 2s forwards 4s ease-in-out;
+			animation: fillTop 2s forwards 4s ease-in-out;
+		}
+		
+		.timeline__event:nth-child(n + 1) .timeline__event__icon:after {
+			content: "";
+			width: 100%;
+			height: 2px;
+			background: #f6a4ec;
+			position: absolute;
+			right: 0;
+			z-index: -1;
+			top: 50%;
+			left: auto;
+			transform: translateY(-50%);
+			-webkit-animation: fillLeft 2s forwards 4s ease-in-out;
+			animation: fillLeft 2s forwards 4s ease-in-out;
+		}
+		
+		.timeline__event__title {
+			font-size: 1.2rem;
+			line-height: 1.4;
+			text-transform: uppercase;
+			font-weight: 600;
+			color: #9251ac;
+			letter-spacing: 1.5px;
+		}
+		
+		.timeline__event__content {
+			padding: 20px;
+			box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3), 0 -12px 36px -8px rgba(0, 0, 0, 0.025);
+			background: #fff;
+			width: calc(40vw - 84px);
+			border-radius: 0 6px 6px 0;
+		}
+		
+		.timeline__event__date {
+			color: #f6a4ec;
+			font-size: 1.5rem;
+			font-weight: 600;
+			background: #9251ac;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			white-space: nowrap;
+			padding: 0 20px;
+			border-radius: 6px 0 0 6px;
+		}
+		
+		.timeline__event__icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #9251ac;
+			padding: 20px;
+			align-self: center;
+			margin: 0 20px;
+			background: #f6a4ec;
+			border-radius: 100%;
+			width: 40px;
+			box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3), 0 -12px 36px -8px rgba(0, 0, 0, 0.025);
+			padding: 40px;
+			height: 40px;
+			position: relative;
+		}
+		
+		.timeline__event__icon i {
+			font-size: 32px;
+		}
+		
+		.timeline__event__icon:before {
+			content: "";
+			width: 2px;
+			height: 100%;
+			background: #f6a4ec;
+			position: absolute;
+			top: 0%;
+			z-index: -1;
+			left: 50%;
+			transform: translateX(-50%);
+			-webkit-animation: fillTop 2s forwards 4s ease-in-out;
+			animation: fillTop 2s forwards 4s ease-in-out;
+		}
+		
+		.timeline__event__icon:after {
+			content: "";
+			width: 100%;
+			height: 2px;
+			background: #f6a4ec;
+			position: absolute;
+			left: 0%;
+			z-index: -1;
+			top: 50%;
+			transform: translateY(-50%);
+			-webkit-animation: fillLeftOdd 2s forwards 4s ease-in-out;
+			animation: fillLeftOdd 2s forwards 4s ease-in-out;
+		}
+		
+		.timeline__event__description {
+			flex-basis: 60%;
+		}
+		
+		.timeline__event--type2:after {
+			background: #555ac0;
+		}
+		
+		.timeline__event--type2 .timeline__event__date {
+			color: #87bbfe;
+			background: #555ac0;
+		}
+		
+		.timeline__event--type2:nth-child(n + 1) .timeline__event__icon:before,
+		.timeline__event--type2:nth-child(n + 1) .timeline__event__icon:after {
+			background: #87bbfe;
+		}
+		
+		.timeline__event--type2 .timeline__event__icon {
+			background: #87bbfe;
+			color: #555ac0;
+		}
+		
+		.timeline__event--type2 .timeline__event__icon:before,
+		.timeline__event--type2 .timeline__event__icon:after {
+			background: #87bbfe;
+		}
+		
+		.timeline__event--type2 .timeline__event__title {
+			color: #555ac0;
+		}
+		
+		.timeline__event--type3:after {
+			background: #24b47e;
+		}
+		
+		.timeline__event--type3 .timeline__event__date {
+			color: #aff1b6;
+			background-color: #24b47e;
+		}
+		
+		.timeline__event--type3:nth-child(n + 1) .timeline__event__icon:before,
+		.timeline__event--type3:nth-child(nn + 1) .timeline__event__icon:after {
+			background: #aff1b6;
+		}
+		
+		.timeline__event--type3 .timeline__event__icon {
+			background: #aff1b6;
+			color: #24b47e;
+		}
+		
+		.timeline__event--type3 .timeline__event__icon:before,
+		.timeline__event--type3 .timeline__event__icon:after {
+			background: #aff1b6;
+		}
+		
+		.timeline__event--type3 .timeline__event__title {
+			color: #24b47e;
+		}
+		
+		.timeline__event:last-child .timeline__event__icon:before {
+			content: none;
+		}
+		
+		@media (max-width: 786px) {
+			.timeline__event {
+				flex-direction: column;
+				align-self: center;
+			}
+			.timeline__event__content {
+				width: 100%;
+			}
+			.timeline__event__icon {
+				border-radius: 6px 6px 0 0;
+				width: 100%;
+				margin: 0;
+				box-shadow: none;
+			}
+			.timeline__event__icon:before,
+			.timeline__event__icon:after {
+				display: none;
+			}
+			.timeline__event__date {
+				border-radius: 0;
+				padding: 20px;
+			}
+			.timeline__event:nth-child(n + 1) {
+				flex-direction: column;
+				align-self: center;
+			}
+			.timeline__event:nth-child(n + 1) .timeline__event__date {
+				border-radius: 0;
+				padding: 20px;
+			}
+			.timeline__event:nth-child(n + 1) .timeline__event__icon {
+				border-radius: 6px 6px 0 0;
+				margin: 0;
+			}
+		}
+		
+		@-webkit-keyframes fillLeft {
+			100% {
+				right: 100%;
+			}
+		}
+		
+		@keyframes fillLeft {
+			100% {
+				right: 100%;
+			}
+		}
+		
+		@-webkit-keyframes fillTop {
+			100% {
+				top: 100%;
+			}
+		}
+		
+		@keyframes fillTop {
+			100% {
+				top: 100%;
+			}
+		}
+		
+		@-webkit-keyframes fillLeftOdd {
+			100% {
+				left: 100%;
+			}
+		}
+		
+		@keyframes fillLeftOdd {
+			100% {
+				left: 100%;
+			}
+		}
+		
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: 32px;
+			height: 16px;
+		}
+		
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+		
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #ccc;
+			-webkit-transition: 0.4s;
+			transition: 0.4s;
+			box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+		}
+		
+		.sliderOne {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #cdd7dd !important;
+			-webkit-transition: 0.4s;
+			transition: 0.4s;
+			box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+		}
+		
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 16px;
+			width: 16px;
+			left: 0px;
+			bottom: 0px;
+			background-color: #116da3;
+			-webkit-transition: 0.4s;
+			transition: 0.4s;
+			box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+		}
+		
+		.sliderOne:before {
+			position: absolute;
+			content: "";
+			height: 16px;
+			width: 16px;
+			left: 0px;
+			bottom: 0px;
+			background-color: #868b8e;
+			-webkit-transition: 0.4s;
+			transition: 0.4s;
+			box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+		}
+		
+		input:checked+.slider {
+			background-color: #b2d4e4;
+		}
+		
+		input:focus+.slider {
+			box-shadow: 0 0 1px #2196f3;
+		}
+		
+		input:checked+.slider:before {
+			-webkit-transform: translateX(16px);
+			-ms-transform: translateX(16px);
+			transform: translateX(16px);
+		}
+		
+		input:checked+.sliderOne {
+			background-color: #b2d4e4;
+		}
+		
+		input:focus+.sliderOne {
+			box-shadow: 0 0 1px #2196f3;
+		}
+		
+		input:checked+.sliderOne:before {
+			-webkit-transform: translateX(16px);
+			-ms-transform: translateX(16px);
+			transform: translateX(16px);
+		}
+		/* Rounded sliders */
+		
+		.slider.round {
+			border-radius: 14px;
+		}
+		
+		.sliderOne.round {
+			border-radius: 14px;
+		}
+		
+		.slider.round:before {
+			border-radius: 50%;
+		}
+		
+		.sliderOne.round:before {
+			border-radius: 50%;
+		}
+		
+		.aTag {
+			text-decoration: none;
+			color: black;
+		}
+		
+		.aTag:hover {
+			text-decoration: none;
+			color: black;
+		}
+		
+		.card {
+			margin-top: 6px;
+			margin-bottom: 6px;
+		}
+		
+		.divBtn {
+			display: flex;
+			flex-direction: row-reverse;
+		}
+		
+		#outerId {
+			height: 200px;
+			overflow-y: scroll;
+		}
+		
+		@media screen and (min-width: 20px) and (max-width: 424px) {
+			#outerId {
+				height: 200px;
+				overflow-y: scroll;
+			}
+			.switchCss {
+				z-index: 2;
+				margin-left: 75px;
+				margin-top: -76px;
+			}
+			.timeline {
+				margin-top: -11px;
+			}
+			.togglecss {
+				margin-top: -18px;
+			}
+			.subHeading {
+				margin-top: -15px;
+			}
+		}
+		
+		@media screen and (min-width: 425px) and (max-width: 768px) {
+			.imgTag {
+				margin-left: -18px;
+				height: 6rem;
+				width: 9rem;
+				cursor: pointer;
+				overflow: hidden;
+			}
+			#outerId {
+				height: 200px;
+				overflow-y: scroll;
+			}
+			.switchCss {
+				z-index: 2;
+				margin-left: 75px;
+				margin-top: -76px;
+			}
+			.timeline {
+				margin-top: -11px;
+			}
+			.togglecss {
+				margin-top: -18px;
+			}
+			.subHeading {
+				margin-top: -15px;
+			}
+		}
+		
+		@media screen and (min-width: 1024px) and (max-width: 1440px) {
+			p#remove-me {
+				margin-top: -15px;
+				background-color: white;
+				width: 98%;
+			}
+			#outerId {
+				height: 89vh !important;
+				overflow-y: scroll;
+			}
+			html.ext-strict {
+				overflow-y: hidden;
+			}
+			.switch {
+				width: 32px;
+				height: 16px;
+				margin-top: -40px;
+				margin-left: 71px;
+			}
+			.imgTag {
+				float: right;
+			}
+			.timeline {
+				margin-top: 0px;
+			}
+			.info {
+				margin-bottom: -24px;
+			}
+			div#spinnerloader {
+				background-color: white;
+				position: absolute;
+				width: 98%;
+				bottom: 0px;
+			}
+		}
+		
+		@media screen and (min-width: 1441px) {
+			p#remove-me {
+				margin-top: -20px;
+				background-color: white;
+				width: 99%;
+			}
+			#outerId {
+				height: 95vh !important;
+				overflow-y: scroll;
+			}
+			.switch {
+				width: 32px;
+				height: 16px;
+				margin-top: -40px;
+				margin-left: 71px;
+			}
+			html.ext-strict {
+				overflow-y: hidden;
+			}
+			.imgTag {
+				float: right;
+			}
+			.timeline {
+				margin-top: 0px;
+			}
+			.info {
+				margin-bottom: -24px;
+			}
+			div#spinnerloader {
+				background-color: white;
+				position: absolute;
+				width: 99%;
+				bottom: 4px;
+			}
+		}
+		
+		.showHide {
+			float: right;
+			margin-top: 5px;
+		}
+		
+		.paraTags {
+			position: absolute;
+			bottom: 1rem;
+			width: 100%;
+			text-align: center;
+		}
+		
+		p {
+			margin-bottom: 1px;
+		}
+		
+		#remove_me {
+			background-color: white;
+		}
+		</style>
+	</head>
+
+	<body class="outerIdd">
+		<div class="timeline">
+			<div class="row">
+				<div class="col">
+					<p><b> Rss Feed - Mobile </b></p>
+				</div>
+				<div class="col">
+					<div class="divBtn">
+						<apex:form>
+							<apex:commandButton value="Back" action="{!backButton}" /> </apex:form>
+					</div>
+				</div>
+			</div>
+			<div id="dataContainer">
+				<div class="outer" id="outerId" onscroll="scrollContainer()"></div>
+				<div class="d-flex justify-content-center d-none loaderTag" id="spinnerloader">
+					<div class="spinner-border" role="status"> <span class="visually-hidden">Loading...</span> </div>
+				</div>
+			</div>
+		</div>
+		<script>
+		let offset = 0;
+		var url = new URL(window.location.href);
+		var id = url.searchParams.get("id");
+		var appLogoUrl;
+		var checkResultData;
+		rssFeed.getAppLogoUrl(id, function(result, event) {
+			if(event.status) {
+				appLogoUrl = result[0].App_Logo__c;
+			}
+		});
+		var elements = document.getElementsByClassName("outer");
+		fetchRssFeed();
+
+		function fetchRssFeed() {
+			var url = new URL(window.location.href);
+			var id = url.searchParams.get("id");
+			rssFeed.getFeed(id, offset, function(result, event) {
+				var data = [result]; // Array of data to be loaded
+				var currentIndex = 0; // Index of data currently displayed
+				var loadSize = 10; // Number of data items to be loaded at a time
+				if(event.status) {
+					var Data = result;
+					checkResultData = result;
+					//console.log('Result: ', Data);
+					for(let i = 0; i < result.length; i++) {
+						let heading = result[i].Title;
+						let webName = result[i].Link;
+						let siteName = webName.split("//")[1].split("/")[0];
+						let subHeading;
+						let media = result[i].Media;
+						let imgId = result[i].Id;
+						let description = result[i].Description;
+						let descriptionUrl = description.split(";");
+						let src = descriptionUrl[4];
+						let Enable_RSS_Feed = result[i].Enable_RSS_Feed;
+						let Synced_To_DB = result[i].Synced_To_DB;
+						let creator = result[i].Creator;
+						let StrDesc = String(description);
+						let divCont = document.createElement('div');
+						divCont.innerHTML = StrDesc;
+						let decodedString = divCont.textContent.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#039;/g, "'");
+						let tempDiv = document.createElement('div');
+						tempDiv.innerHTML = decodedString;
+						let textDesc = tempDiv.textContent;
                         
-                            validateImageSrc(media)
-                                .then((result) => {
-                                    if (Synced_To_DB === false) {
+						validateImageSrc(media).then((result) => {
+							if(Synced_To_DB === false) {
+								removeToggle(imgId, webName, heading, media, creator, textDesc);
+							} else {
+								if(Enable_RSS_Feed === "False") {
+									toggleUnchecked(imgId, webName, heading, media, creator, textDesc);
+								} else {
+									ToggleChecked(imgId, webName, heading, media, creator, textDesc);
+								}
+							}
+						}).catch((error) => {
+							if(Synced_To_DB === false) {
+								removeToggle(imgId, webName, heading, appLogoUrl, creator, textDesc);
+							} else {
+								if(Enable_RSS_Feed === "False") {
+									toggleUnchecked(imgId, webName, heading, appLogoUrl, creator, textDesc);
+								} else {
+									ToggleChecked(imgId, webName, heading, appLogoUrl, creator, textDesc);
+								}
+							}
+						});
 
-                                        Notoggle(imgId, webName, heading, media, creator, textDesc);
-                                    }
-                                    else {
+						function validateImageSrc(url) {
+							return new Promise((resolve, reject) => {
+								const img = new Image();
+								img.onload = () => {
+									resolve(true);
+								};
+								img.onerror = () => {
+									reject(false);
+								};
+								img.src = url;
+							});
+						}
+					}
+				}
+			});
+		}
 
-                                        if (Enable_RSS_Feed === "False") {
+		function scrollContainer() {
+			let temp = document.getElementById("outerId");
+			//console.log('client Height: ',temp.clientHeight);
+			//console.log('scrollHeight": ',temp.scrollHeight);
+			//console.log('scrollTop: ',temp.scrollTop);
+			if(temp.scrollHeight - (temp.scrollTop + temp.clientHeight) < 2) {
+				offset += 10;
+                                //console.log("Limit: ", checkResultData);
+				if(checkResultData.length !== 0) {
+                                //console.log('Show Loader');
+					document.querySelector("#spinnerloader").classList.remove("d-none");
+					rssFeed.getFeed(id, offset, function(result, event) {
+						if(event.status) {
+                                //console.log('ResLength: ', result.length);
+							if(result.length === 0)
+							//console.log("Inside loader");
+							{
+								let removeLoader = document.querySelector('.loaderTag');
+								removeLoader.insertAdjacentHTML('beforebegin', '<p class="paraTag" id="remove-me">All posts loaded successfully</p>');
+								removeLoader.remove();
+								const element = document.getElementById('remove-me');
+								setTimeout(() => {
+									element.remove();
+								}, 3000);
+							} else {
+								fetchRssFeed();
+								setTimeout(() => {
+									document.querySelector("#spinnerloader").classList.add("d-none");
+								}, 2000);
+							}
+						}
+					});
+				}
+			}
+		}
 
-                                            toggle(imgId, webName, heading, media, creator, textDesc);
+		function tgData(event) {
+			let dataId = event.parentNode.parentNode.parentNode.parentNode.attributes["data-id"].value;
+			//console.log(dataId);
+			//console.log('Ev_',event.parentNode.parentNode.children[6]);
+			const toggle = document.querySelectorAll("#myToggle");
+			if(event.hasAttribute("checked")) {
+				event.removeAttribute("checked");
+				event.parentNode.parentNode.children[9].innerHTML = "Show Post";
+				event.parentNode.parentNode.children[12].children[1].classList.remove('slider');
+				event.parentNode.parentNode.children[12].children[1].classList.add('sliderOne');
+			} else {
+				event.parentNode.parentNode.children[9].innerHTML = "Hide Post";
+				event.setAttribute("checked", true);
+				event.parentNode.parentNode.children[12].children[1].classList.add('slider');
+				event.parentNode.parentNode.children[12].children[1].classList.remove('sliderOne');
+			}
+			for(let i = 0; i < toggle.length; i++) {
+				toggle[i].addEventListener("change", function() {
+					let booleanResult = toggle[i].checked ? "true" : "false";
+                                //console.log('bln Result: ', booleanResult);
+					Visualforce.remoting.Manager.invokeAction("{!$RemoteAction.rssFeed.showHidePost}", dataId, booleanResult, function(result, evt) {
+						if(evt.status) {
+							//console.log('Result: ' + result);
+						} else {
+							//console.log('Error: ' + event.message);
+						}
+					});
+				});
+			}
+		}
 
-                                        } else {
-
-                                            HidePostToggleChecked(imgId, webName, heading, media, creator, textDesc);
-                                        }
-                                    }
-
-                                })
-                                .catch((error) => {
-                                    if (Synced_To_DB === false) {
-                                        Notoggle(imgId, webName, heading, appLogoUrl, creator, textDesc);
-                                    }
-                                    else {
-                                        if (Enable_RSS_Feed === "False") {
-
-                                            toggle(imgId, webName, heading, appLogoUrl, creator, textDesc);
-                                        }
-                                        else {
-
-                                            HidePostToggleChecked(imgId, webName, heading, appLogoUrl, creator, textDesc);
-                                        }
-                                    }
-                                });
-
-
-                            function validateImageSrc(url) {
-                                return new Promise((resolve, reject) => {
-                                    const img = new Image();
-                                    img.onload = () => {
-                                        resolve(true);
-                                    };
-                                    img.onerror = () => {
-                                        reject(false);
-                                    };
-                                    img.src = url;
-                                });
-                            }
-                        }
-                    }
-                });
-            }
-            document.getElementById("outerId").innerHTML += `
-				                       
-				                        `;
-
-            function rendrPage() {
-                var url = new URL(window.location.href);
-                var id = url.searchParams.get("id");
-                //console.log('ID: ', id);
-            }
-
-            function scrollContainer() {
-                let temp = document.getElementById("outerId");
-                //console.log('client Height: ',temp.clientHeight);
-                //console.log('scrollHeight": ',temp.scrollHeight);
-                //console.log('scrollTop: ',temp.scrollTop);
-
-                if (temp.scrollHeight - (temp.scrollTop + temp.clientHeight) < 2) {
-                    offset += 10;
-                    console.log("Limit: ", checkResultData);
-                    if (checkResultData.length !== 0) {
-                        document.querySelector("#spinnerloader").classList.remove("d-none");
-                        rssFeed.getFeed(id, offset, function (result, event) {
-                            if (event.status) {
-                                console.log(result);
-                                    //console.log("Inside loader");
-                                fetchRssFeed();
-                                setTimeout(() => {
-                                    document.querySelector("#spinnerloader").classList.add("d-none");
-                                }, 2000);
-                            }
-                        });
-                    } else {
-                        let removeLoader = document.querySelector('.loaderTag');
-                        removeLoader.insertAdjacentHTML('beforebegin', '<p class="paraTag" id="remove-me">All posts loaded successfully</p>');
-                        removeLoader.remove();
-                        const element = document.getElementById('remove-me');
-                        setTimeout(() => {
-                            element.remove();
-                        }, 3000);
-
-                    }
-                    var spinnerLoader = document.querySelectorAll(".spinnerloader");
-                    spinnerLoader.classList.remove("d-none");
-                }
-            }
-
-            function tgData(event) {
-                let dataId = event.parentNode.parentNode.parentNode.parentNode.attributes["data-id"].value;
-                //console.log(dataId);
-                //console.log('Ev_',event.parentNode.parentNode.children[6]);
-                const toggle = document.querySelectorAll("#myToggle");
-
-                if (event.hasAttribute("checked")) {
-                    event.removeAttribute("checked");
-                    event.parentNode.parentNode.children[9].innerHTML = "Show Post";
-                    event.parentNode.parentNode.children[12].children[1].classList.remove('slider');
-                    event.parentNode.parentNode.children[12].children[1].classList.add('sliderOne');
-                } else {
-                    event.parentNode.parentNode.children[9].innerHTML = "Hide Post";
-                    event.setAttribute("checked", true);
-                    event.parentNode.parentNode.children[12].children[1].classList.add('slider');
-                    event.parentNode.parentNode.children[12].children[1].classList.remove('sliderOne');
-
-                }
-
-                for (let i = 0; i < toggle.length; i++) {
-                    toggle[i].addEventListener("change", function () {
-                        let booleanResult = toggle[i].checked ? "true" : "false";
-                        console.log('bln Result: ', booleanResult);
-                        Visualforce.remoting.Manager.invokeAction("{!$RemoteAction.rssFeed.showHidePost}", dataId, booleanResult, function (result, evt) {
-                            if (evt.status) {
-                                //console.log('Result: ' + result);
-                            } else {
-                                //console.log('Error: ' + event.message);
-                            }
-                        });
-                    });
-                }
-            }
-
-
-            function Notoggle(imgId, webName, heading, media, creator, textDesc) {
-                
-                document.getElementById("outerId").innerHTML += `
+		function removeToggle(imgId, webName, heading, media, creator, textDesc) {
+			document.getElementById("outerId").innerHTML += `
                     <div class="card" id = "cardId">
                         <div class="info">
                             <div class="divOne" data-id="${imgId}">
@@ -903,16 +822,11 @@
                             </div>
     
                             `;
+			return document.getElementById("outerId").innerHTML;
+		}
 
-                return document.getElementById("outerId").innerHTML;
-
-
-            }
-
-
-            function toggle(imgId, webName, heading, media, creator, textDesc) {
-                
-                document.getElementById("outerId").innerHTML += `
+		function toggleUnchecked(imgId, webName, heading, media, creator, textDesc) {
+			document.getElementById("outerId").innerHTML += `
                             <div class="card" id="cardId">
                                 <div class="info">
                                     <div class="divOne" data-id="${imgId}">
@@ -942,17 +856,11 @@
                                                 </div>
     
                                                     `;
+			return document.getElementById("outerId").innerHTML;
+		}
 
-
-                return document.getElementById("outerId").innerHTML;
-
-            }
-
-
-
-            function HidePostToggleChecked(imgId, webName, heading, media, creator, textDesc) {
-
-                document.getElementById("outerId").innerHTML += `
+		function ToggleChecked(imgId, webName, heading, media, creator, textDesc) {
+			document.getElementById("outerId").innerHTML += `
                                                     <div class="card" id="cardId">
                                                         <div class="info">
                                                             <div class="divOne" data-id="${imgId}">
@@ -983,12 +891,10 @@
                                                                         </div>
                     
                                 `;
+			return document.getElementById("outerId").innerHTML;
+		}
+		</script>
+	</body>
 
-
-                return document.getElementById("outerId").innerHTML;
-            }
-
-        </script>
-    </body>
-    </html>
+	</html>
 </apex:page>
