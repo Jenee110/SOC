@@ -1,0 +1,68 @@
+public class rssFeed {
+
+    @RemoteAction
+    public static List < Object > getAppLogoUrl(String id) {
+        List < Object > appLogo = [SELECT App_Logo__c FROM School_App__c WHERE Id =: id];
+        system.debug('App Logo URL: ' + appLogo);
+        return appLogo;
+    }
+
+    @RemoteAction
+    public static List < Object > getFeed(String tempId, integer offset) {
+        string id = tempId;
+        system.debug('Id: ' +id);
+        system.debug('offset: ' +offset);
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('https://anl2h22jc4.execute-api.us-east-2.amazonaws.com/production/getSocialRSSFeed/' + id + '?offset=' + offset + '&limit=10&showHiddenPosts=true');
+        req.setMethod('GET');
+        Http http = new Http();
+        String message;
+        HttpResponse res = http.send(req);
+        message = res.getBody();
+        Map < String, object > responseData = (Map < String, object > ) JSON.deserializeUntyped(message);
+        List < Object > myMapObjects = (List < Object > ) responseData.get('body');
+        System.debug(myMapObjects);
+        return myMapObjects;
+    }
+
+    public PageReference expandView() {
+        string accId = ApexPages.CurrentPage().getparameters().get('Id');
+        //  system.debug('accId'+accId);
+        pageReference pg = new pageReference('/apex/rssFeedExpandedView?id=' + accId);
+       
+        return pg.setRedirect(true);
+    }
+
+    public PageReference backButton() {
+                
+        // Create a new page reference
+        String pageUrl = URL.getSalesforceBaseUrl().toExternalForm();        
+        string accId = ApexPages.CurrentPage().getparameters().get('Id');       
+        //  system.debug('accId'+accId);
+        pageReference pg = new pageReference(pageUrl + '/' + accId);        
+        return pg.setRedirect(true);
+    }
+
+    @RemoteAction
+    public static String showHidePost(String postId, Boolean value) {
+        // system.debug('Id: '+ postId);
+        //  system.debug('Boolean Value: '+value);
+        HttpRequest req = new HttpRequest();
+        req.setMethod('POST');
+        req.setEndpoint('https://ny67869sad.execute-api.us-east-2.amazonaws.com/production/saveRecords?objectName=Social_Feed');
+        req.setHeader('content-type', 'application/json');
+        req.setHeader('Authorization', 'Bearer ' + 'r?ftDEZ_qdt=VjD#W@S2LM8FZT97Nx');
+
+        String jsonBody = '[{"Id": "' + postId + '", "Enable_RSS_Feed": "' + value + '"}]';
+        req.setHeader('Content-length', String.valueOf(jsonBody.length()));
+        req.setBody(jsonBody);
+        req.setTimeout(60 * 1000);
+        req.getBody();
+        Http http = new Http();
+        HTTPResponse res = http.send(req);
+        String response = res.getBody();
+        // system.debug('response:'+response);
+        return response;
+    }
+    
+}
