@@ -694,7 +694,7 @@
 							if(Synced_To_DB === false) {
 								removeToggle(imgId, webName, heading, media, creator, textDesc);
 							} else {
-								if(Enable_RSS_Feed === "False") {
+								if(Enable_RSS_Feed === "false") {
 									toggleUnchecked(imgId, webName, heading, media, creator, textDesc);
 								} else {
 									ToggleChecked(imgId, webName, heading, media, creator, textDesc);
@@ -704,7 +704,7 @@
 							if(Synced_To_DB === false) {
 								removeToggle(imgId, webName, heading, appLogoUrl, creator, textDesc);
 							} else {
-								if(Enable_RSS_Feed === "False") {
+								if(Enable_RSS_Feed === "false") {
 									toggleUnchecked(imgId, webName, heading, appLogoUrl, creator, textDesc);
 								} else {
 									ToggleChecked(imgId, webName, heading, appLogoUrl, creator, textDesc);
