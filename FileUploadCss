@@ -1,0 +1,831 @@
+#dvFastForms .ff-page-header-row  {
+      border-width:0px;
+      padding:0px;
+      }
+ .ff-logo  {
+      padding:1px;
+      }
+ .ff-header  {
+      padding:0px;
+      }
+ .ff-form-main  {
+      margin:auto;
+      max-width: 800px;
+      width: 90vw;
+      border-width:0px;
+      padding:0px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      }
+ .ff-item-row  {
+      width: 100%;
+      overflow: hidden;
+      height: auto;
+      padding-top: 10px;
+      }
+ #dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style:none;
+      border-radius:40px;
+      border-width:100px;
+      max-width:1000px;
+      padding:50px;
+      height: 460px;
+      }
+ #dvFastForms .ff-section-header  {
+      font-family:Arial;
+      font-weight:bold;
+      font-size:45px;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      color: black;
+      }
+ #dvFastForms .ff-footer-group  {
+      padding:0px;
+      }
+ #dvFastForms .ff-col-2.ff-field-col  {
+      max-width:100%;
+      width:100%;
+      clear:left;
+      margin-top: 50px;
+      }
+ .ff-required-mark  {
+      visibility: hidden;
+      }
+ #dvFastForms .ff-label-col  {
+      text-align: center;
+      padding:0px;
+      font-size: 16px;
+      font-family: Arial;
+      }
+ #dvFastForms .ff-field-col,#dvFastForms .select2-results .select2-no-results,#dvFastForms .select2-results .select2-searching,#dvFastForms .select2-results .select2-result-label  {
+      text-align:right;
+       }
+ #dvFastForms .ff-type-text,#dvFastForms .ff-textarea,#dvFastForms select.ff-select-type,#dvFastForms .ff-fileupload-drop-area,#dvFastForms .select2-container  {
+      background-color:rgba(255,255,255,1);
+      }
+ #dvFastForms .ff-type-text,#dvFastForms .ff-textarea,#dvFastForms select.ff-select-type,#dvFastForms .ff-fileupload-drop-area,#dvFastForms .select2-container .select2-choice,#dvFastForms .select2-container .select2-choices  {
+      border-style: dashed;
+      border-radius: 25px;
+      border-width: 2px;
+      padding: 85px;
+      color: #727272;
+      text-align: center;
+      height: 30px;
+      }
+ #dvFastForms .ff-textarea  {
+      height:600px;
+      }
+ #dvFastForms #lblFileUpload159  {
+      font-size: medium;
+      color: #6A707E;
+      }
+ .ff-col-1  {
+      float: inherit;
+      min-width: 40%;
+      }
+ #dvFastForms .ff-btn-submit  {
+      border-width: 11px;
+      border: none;
+      width: 213px;
+      height: 50px;
+      border-radius: 25px;
+      background: #00DDC2;
+      font-weight: 700;
+      font-family: arial;
+      font-size: inherit;
+      }
+ #dvFastForms .btnDiv  {
+      text-align: center;
+      }
+ .footnoteDiv  {
+      visibility: hidden;
+      }
+ #dvFastForms .btnDiv input  {
+      margin-left: 0px;
+      }
+.ff-fileupload-select  {
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      font-family: arial;
+      }
+ @media only screen and (max-width: 360px)  {
+      #dvFastForms .ff-type-text, #dvFastForms .ff-textarea, #dvFastForms select.ff-select-type, #dvFastForms .ff-fileupload-drop-area, #dvFastForms .select2-container .select2-choice, #dvFastForms .select2-container .select2-choices  {
+      border-style: dashed;
+      border-radius: 25px;
+      border-width: 2px;
+      padding: 22px !important;
+      color: #727272;
+      }
+ .ff-invalid-msg  {
+      color: Red;
+      font-size: 14px;
+      position: absolute;
+      margin-top: 72px !important;
+      margin-right: 75px !important;
+      text-align: initial;
+      }
+#dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 20px;
+      margin-top: 80px;
+      height: 290px;
+      }
+#dvFastForms .ff-section-header  {
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 20px !important;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      color: black;
+      }
+#dvFastForms .btnDiv input  {
+      margin-left: 0px;
+      }
+.ff-fileupload-select  {
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      font-family: arial;
+      font-size: small !important;
+      }
+}
+@media only screen and (max-width: 575px)  {
+      #dvFastForms .ff-type-text, #dvFastForms .ff-textarea, #dvFastForms select.ff-select-type, #dvFastForms .ff-fileupload-drop-area, #dvFastForms .select2-container .select2-choice, #dvFastForms .select2-container .select2-choices  {
+      border-style: dashed;
+      border-radius: 25px;
+      border-width: 2px;
+      padding: 64px;
+      color: #727272;
+      height: 40px;
+      font-size: 10px;
+      }
+#dvFastForms .btnDiv input  {
+      margin-left: -21px;
+      }
+ .ff-submit-btn  {
+      margin-left: 292px;
+       margin-top: -115px !important;
+      position: fixed;
+      align-content: center;
+      }
+#dvFastForms .ff-section-header  {
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 35px;
+      display: flex;
+      justify-content: center;
+      color: black;
+      align-items: center;
+      }
+#dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 50px;
+      height: 390px !important;
+      }
+ .ff-invalid-msg  {
+      color: Red;
+      font-size: 14px;
+      position: absolute;
+      margin-top: 130px !important;
+      margin-left: 0px !important;
+      }
+}
+@media only screen and (max-width: 500px)  {
+      #dvFastForms .ff-section-header  {
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 24px !important;
+      display: flex;
+      justify-content: center;
+      color: black;
+      align-items: center;
+      }
+ #dvFastForms .ff-type-text, #dvFastForms .ff-textarea, #dvFastForms select.ff-select-type, #dvFastForms .ff-fileupload-drop-area, #dvFastForms .select2-container .select2-choice, #dvFastForms .select2-container .select2-choices  {
+      border-style: dashed;
+      border-radius: 25px;
+      border-width: 2px;
+      padding: 30px;
+      color: #727272;
+      height: 60px;
+      display: flex;
+      align-content: center;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      }
+#dvFastForms #lblFileUpload159  {
+      font-size: small;
+      color: #6A707E;
+      }
+#dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 50px;
+      height: 345px !important;
+      }
+ .ff-fileupload-select  {
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      font-family: arial;
+      font-size: 15px;
+      }
+ .ff-invalid-msg  {
+      color: Red;
+      font-size: 14px;
+      position: absolute;
+       margin-top: 165px !important;
+      margin-right: 75px !important;
+      text-align: initial;
+      }
+ #dvFastForms .btnDiv input  {
+      margin-left: -35px;
+      }
+#dvFastForms .ff-btn-submit  {
+      border-width: 11px;
+      border: none;
+      width: 190px;
+      height: 44px;
+      border-radius: 25px;
+      background: #00DDC2;
+      font-weight: 700;
+      font-family: arial;
+      font-size: inherit;
+      }
+ .ff-submit-btn  {
+      margin-left: 292px;
+      margin-top: -100px !important;
+      position: fixed;
+      align-content: center;
+      }
+}
+@media only screen and (max-width: 415px)  {
+      #dvFastForms .ff-section-header  {
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 21px;
+      display: flex;
+      justify-content: center;
+      color: black;
+      align-items: center;
+      }
+#dvFastForms #lblFileUpload159  {
+      font-size: small;
+      color: #6A707E;
+      }
+#dvFastForms .ff-type-text, #dvFastForms .ff-textarea, #dvFastForms select.ff-select-type, #dvFastForms .ff-fileupload-drop-area, #dvFastForms .select2-container .select2-choice, #dvFastForms .select2-container .select2-choices  {
+      border-style: dashed;
+      border-radius: 25px;
+      border-width: 2px;
+      padding: 20px;
+      color: #727272;
+      }
+#dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 50px;
+      height: 300px !important;
+      }
+.ff-form-main  {
+      margin: auto;
+      max-width: 800px !important;
+      border-width: 0px;
+      padding: 0px;
+      }
+ .ff-invalid-msg  {
+      color: Red;
+      font-size: 14px;
+      position: absolute;
+      margin-top: 145px !important;
+      margin-right: 60px !important;
+      text-align: initial;
+      }
+ #dvFastForms .btnDiv input  {
+      margin-left: -15px !important;
+      }
+}
+ @media only screen and (max-width: 335px)  {
+      #dvFastForms .ff-type-text, #dvFastForms .ff-textarea, #dvFastForms select.ff-select-type, #dvFastForms .ff-fileupload-drop-area, #dvFastForms .select2-container .select2-choice, #dvFastForms .select2-container .select2-choices  {
+      border-style: dashed;
+      border-radius: 12px;
+      border-width: 2px;
+      padding: 10px !important;
+      color: #727272;
+      }
+ #dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 20px !important;
+      height: 345px !important;
+      }
+#dvFastForms .ff-section-header  {
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 20px !important;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      color: black;
+      }
+#dvFastForms .btnDiv input  {
+      margin-left: -38px !important;
+      }
+.ff-fileupload-select  {
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      font-family: arial;
+      font-size: small !important;
+      }
+ .ff-invalid-msg  {
+      color: Red;
+      font-size: 14px;
+      position: absolute;
+      margin-top: 132px !important;
+      margin-right: 10px !important;
+      text-align: initial;
+      }
+}
+@media only screen and (max-width: 850px)  {
+      .ff-form-main  {
+      margin: auto;
+      max-width: 800px;
+      border-width: 0px;
+      padding: 0px;
+      }
+ .ff-submit-btn  {
+      margin-left: 29vw !important;
+      margin-top: -90px;
+      position: fixed;
+      align-content: center;
+      }
+ #dvFastForms .ff-type-text, #dvFastForms .ff-textarea, #dvFastForms select.ff-select-type, #dvFastForms .ff-fileupload-drop-area, #dvFastForms .select2-container .select2-choice, #dvFastForms .select2-container .select2-choices  {
+      overflow: scroll;
+      font-size: 12px;
+      }
+}
+@media only screen and (max-width: 450px)  {
+      .ff-submit-btn  {
+      margin-left: 292px;
+      margin-top: -92px !important;
+      position: fixed;
+      align-content: center;
+      }
+ #dvFastForms .ff-col-2.ff-field-col  {
+      max-width: 100%;
+      width: 100%;
+      clear: left;
+      margin-top: 25px !important;
+      }
+#dvFastForms .ff-type-text, #dvFastForms .ff-textarea, #dvFastForms select.ff-select-type, #dvFastForms .ff-fileupload-drop-area, #dvFastForms .select2-container .select2-choice, #dvFastForms .select2-container .select2-choices  {
+      border-style: dashed;
+      border-radius: 25px;
+      border-width: 2px;
+      padding: 55px !important;
+      color: #727272;
+      }
+#dvFastForms .btnDiv input  {
+      margin-left: -50px;
+      }
+ .ff-invalid-msg  {
+      color: Red;
+      font-size: 14px;
+      position: absolute;
+      margin-top: 152px !important;
+      margin-right: 10px !important;
+      text-align: initial;
+      }
+}
+@media only screen and (max-width: 770px)  {
+       .ff-submit-btn  {
+      margin-top: -90px;
+      position: fixed;
+      align-content: center;
+      }
+ }
+@media only screen and (max-width: 300px)  {
+      #dvFastForms .ff-btn-submit  {
+      border-width: 11px;
+      border: none;
+      width: 165px !important;
+      height: 34px !important;
+      border-radius: 25px;
+      background: #00DDC2;
+      font-weight: 700;
+      font-family: arial;
+      font-size: 13px;
+      }
+#dvFastForms .btnDiv input  {
+      margin-left: -30px !important;
+      }
+#dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 20px !important;
+      margin-top: 80px;
+      height: 340px !important;
+      }
+}
+@media only screen and (max-width: 600px)  {
+       .ff-submit-btn  {
+      margin-left: 160px !important;
+      margin-top: -90px;
+      position: fixed;
+      align-content: center;
+      }
+ .ff-invalid-msg  {
+      color: Red;
+      font-size: 14px;
+      position: absolute;
+      margin-top: 213px;
+      margin-left: 0px;
+      text-align: initial;
+      }
+}
+@media only screen and (max-width: 700px)  {
+     .ff-submit-btn  {
+     margin-left: 26vw !important;
+     margin-top: -90px;
+     position: fixed;
+     align-content: center;
+   }
+ .ff-invalid-msg  {
+      color: Red;
+      font-size: 14px;
+      position: absolute;
+      margin-top: 213px;
+      margin-left: 0px;
+      text-align: initial;
+      }
+}
+@media only screen and (max-width: 800px)  {
+       .ff-submit-btn  {
+      margin-top: -90px;
+      position: fixed;
+      align-content: center;
+      }
+ }
+ @media only screen and (max-width: 280px)  {
+      #dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 20px !important;
+      margin-top: 41px;
+      height: 335px !important;
+      }
+#dvFastForms .ff-col-2.ff-field-col  {
+      max-width: 100%;
+      width: 100%;
+      clear: left;
+      margin-top: 25px !important;
+      }
+#dvFastForms .ff-btn-submit  {
+      border-width: 11px;
+      border: none;
+      width: 130px !important;
+      height: 38px !important;
+      border-radius: 25px;
+      background: #00DDC2;
+      font-weight: 700;
+      font-family: arial;
+      font-size: 13px;
+      }
+#dvFastForms .btnDiv input  {
+      margin-left: -20px !important;
+      }
+}
+.ff-submit-btn  {
+      margin-left: 292px;
+      margin-top: -145px;
+      position: fixed;
+      align-content: center;
+      }
+.ff-invalid-msg  {
+      color: Red;
+      font-size: 14px;
+      position: absolute;
+      margin-top: 215px;
+      margin-left: 26px;
+      }
+@media only screen and (max-width: 1600px)  {
+      #dvFastForms .ff-section-header  {
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 35px;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      color: black;
+      }
+#dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 50px;
+        }
+#dvFastForms .ff-type-text, #dvFastForms .ff-textarea, #dvFastForms select.ff-select-type, #dvFastForms .ff-fileupload-drop-area, #dvFastForms .select2-container .select2-choice, #dvFastForms .select2-container .select2-choices  {
+      border-style: dashed;
+      border-radius: 25px;
+      border-width: 2px;
+      padding: 60px;
+      color: #727272;
+      text-align: center;
+      height: 30px;
+       width: 75%;
+      margin: auto;
+      }
+.ff-submit-btn  {
+      margin-left: 170px;
+      margin-top: -100px;
+      position: fixed;
+      align-content: center;
+      }
+.ff-invalid-msg  {
+      color: Red;
+      font-size: 14px;
+      position: absolute;
+      margin-top: 170px;
+      margin-left: 26px;
+      text-align: initial;
+      }
+ }
+#dvFastForms .ff-col-2.ff-field-col  {
+      max-width: 100%;
+      width: 100%;
+      clear: left;
+      margin-top: 40px;
+      }
+ @media only screen and (max-width: 800px)  {
+      #dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 50px;
+      height: 345px;
+      }
+}
+ @media only screen and (min-width: 1240px) and (max-width: 1600px)  {
+     .ff-form-main  {
+      margin: auto;
+      max-width: 800px;
+      width: 38vw;
+      border-width: 0px;
+      padding: 0px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+     }
+.ff-invalid-msg  {
+      color: Red;
+      font-size: 14px;
+      position: absolute;
+      margin-top: 162px;
+      margin-left: 26px;
+      text-align: initial;
+     }
+.ff-submit-btn  {
+     margin-left: 12vw;
+     margin-top: -100px;
+     position: fixed;
+     align-content: center;
+   }
+#dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 50px;
+      height: 362px !important;
+     }
+}
+ @media only screen and (min-width: 1000px) and (max-width: 1240px)  {
+     .ff-form-main  {
+      margin: auto;
+      max-width: 800px;
+      width: 44vw;
+      border-width: 0px;
+      padding: 0px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+     }
+#dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 50px;
+      height: 350px !important;
+     }
+.ff-submit-btn  {
+     margin-left: 12vw;
+     margin-top: -100px;
+     position: fixed;
+     align-content: center;
+   }
+}
+ @media only screen and (min-width: 850px) and (max-width: 1000px)  {
+     .ff-form-main  {
+      margin: auto;
+      max-width: 800px;
+      width: 46vw;
+      border-width: 0px;
+      padding: 0px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+     }
+#dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 50px;
+      height: 355px !important;
+     }
+.ff-submit-btn  {
+      margin-left: 90px !important;
+      margin-top: -100px;
+      position: fixed;
+      align-content: center;
+     }
+}
+ @media only screen and (min-width: 670px) and (max-width: 850px)  {
+     #dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 50px;
+      height: 355px;
+     }
+#dvFastForms .ff-section-header  {
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 30px;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      color: black;
+     }
+.ff-form-main  {
+      margin: auto;
+      max-width: 800px;
+      border-width: 0px;
+      padding: 0px;
+      width: 55vw;
+     }
+#dvFastForms #lblFileUpload159  {
+      font-size: 14px;
+      color: #6A707E;
+     }
+.ff-submit-btn  {
+      margin-left: 103px !important;
+      margin-top: -100px;
+      position: fixed;
+      align-content: center;
+     }
+}
+ @media only screen and (min-width: 500px) and (max-width: 670px)  {
+     #dvFastForms .ff-group-row  {
+      background-color: #DCE2F0;
+      border-style: none;
+      border-radius: 40px;
+      border-width: 100px;
+      max-width: 1000px;
+      padding: 50px;
+      height: 345px !important;
+     }
+#dvFastForms .ff-section-header  {
+      font-family: Arial;
+      font-weight: bold;
+      font-size: 30px;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      color: black;
+     }
+#dvFastForms #lblFileUpload159  {
+      font-size: 14px;
+      color: #6A707E;
+     }
+.ff-invalid-msg  {
+     color: Red;
+     font-size: 14px;
+     position: absolute;
+     margin-top: 165px !important;
+     margin-left: 26px;
+     text-align: initial;
+   }
+}
+ @media only screen and (min-width: 400px) and (max-width: 500px)  {
+     .ff-invalid-msg  {
+     color: Red;
+     font-size: 14px;
+     position: absolute;
+     margin-top: 165px !important;
+     margin-left: 26px;
+     text-align: initial;
+   }
+}
+ @media only screen and (min-width: 1150px) and (max-width: 1300px)  {
+     #dvFastForms .ff-group-row  {
+     background-color: #DCE2F0;
+     border-style: none;
+     border-radius: 40px;
+     border-width: 100px;
+     max-width: 1000px;
+     padding: 35px;
+     height: 282px !important;
+   }
+.ff-item-row  {
+     width: 100%;
+     overflow: hidden;
+     height: auto;
+     padding-top: 0px;
+   }
+#dvFastForms .ff-type-text, #dvFastForms .ff-textarea, #dvFastForms select.ff-select-type, #dvFastForms .ff-fileupload-drop-area, #dvFastForms .select2-container .select2-choice, #dvFastForms .select2-container .select2-choices  {
+     border-style: dashed;
+     border-radius: 25px;
+     border-width: 2px;
+     padding: 60px;
+     color: #727272;
+     text-align: center;
+     height: 0px;
+     width: 75%;
+     margin: auto;
+   }
+#dvFastForms .ff-col-2.ff-field-col  {
+     max-width: 100%;
+     width: 100%;
+     clear: left;
+     margin-top: 30px;
+   }
+.ff-submit-btn  {
+     margin-left: 13vw !important;
+     margin-top: -88px;
+     position: fixed;
+     align-content: center;
+   }
+.ff-invalid-msg  {
+     color: Red;
+     font-size: 14px;
+     position: absolute;
+     margin-top: 128px;
+     margin-left: 26px;
+     text-align: initial;
+   }
+#dvFastForms .ff-group-row  {
+     background-color: #DCE2F0;
+     border-style: none;
+     border-radius: 40px;
+     border-width: 100px;
+     max-width: 1000px;
+     padding: 35px;
+     height: 300px !important;
+   }
+}
