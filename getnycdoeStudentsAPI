@@ -1,0 +1,94 @@
+const { Op } = require("sequelize");
+// const { QueryTypes, fn, col, literal } = require("sequelize");
+// const sequelize = require("../services/sequelize");
+const students = require("../models/nyc_doe_dbn");
+const settings = require("../models/settings");
+
+// Function to get Get Students
+async function getNYCStudentsList(event) {
+  let response = [];
+  let statusCode = 200;
+  let offset = event.offset;
+  let limit = event.limit;
+  console.log(offset);
+  console.log(limit);
+
+  console.log("Inside getNYCStudentsList::::::::::::::::::");
+  try {
+    // Get lastSyncTime
+    const lastSyncTime = await settings.findOne({
+      attributes: ["LastSyncTimeStudents"],
+    });
+
+    console.log(lastSyncTime);
+
+    if (lastSyncTime != null) {
+      const syncTime = lastSyncTime.dataValues.LastSyncTimeStudents;
+
+      //Fetching all data from the last sync time and renaming the field names as per Salesforce object structure
+      const query = await students.findAll({
+        attributes: [
+          ["osis_id", "Student_ID__c"],
+          ["type_desc", "Type_Description__c"],
+          ["first_name", "First_Name__c"],
+          ["last_name", "Last_Name__c"],
+          ["date_of_birth", "DOB_RESI__c"],
+          ["sex", "Sex__c"],
+          ["sex", "Gender__c"],
+          ["school_dbn", "DBN__c"],
+          ["email", "Email__c"],
+          ["race_desc", "Race_Description__c"],
+          ["ethnic_code", "Ethnicity_Code__c"],
+          ["ethnic_desc", "Ethnicity_Description__c"],
+          ["grade_level_code", "Grade__c"],
+          ["home_language_code", "LANG_RESI__c"],
+          ["home_language_desc", "Home_Language_Description__c"],
+          ["iep_special_ed_code", "IEP_Yes_No__c"],
+          ["iep_special_ed_desc", "IEP_Description__c"],
+          ["lep_code", "LEP_Code__c"],
+          ["ela_proficiency_code", "ELL_Proficiency_Code__c"],
+          ["ela_proficiency_desc", "ELL_Proficiency_Description__c"],
+          ["esl_code", "ESL_Code__c"],
+          ["esl_desc", "ESL_Description__c"],
+          ["ytd_attendance_rate_code", "YTD_Attendance_Rate_Code__c"],
+          ["ytd_attendance_rate_desc", "YTD_Attendance_Rate_Description__c"],
+          ["home_phone", "Parent_Phone__c"],
+          ["official_class_code", "Class__c"],
+          ["updated_date", "DOE_Last_Update__c"],
+          ["special_ed_flag", "Special_Ed_Flag__c"],
+          ["admission_date", "ADM_DTE__c"],
+          ["updated_date", "Clean_Update__c"],
+          ["academic_year", "Academic_Year__c"],
+          ["lep_desc", "LEP_Description__c"],
+        ],
+        where: {
+          updated_date: {
+            [Op.gte]: syncTime, // Fetch records updated after last sync time
+          },
+        },
+        order: [["osis_id", "ASC"]],
+        offset: offset,
+        limit: limit,
+      });
+
+      if (offset !== undefined && limit !== undefined) {
+        query.offset = offset;
+        query.limit = limit;
+        response = query;
+      } else {
+        response = query;
+      }
+    }
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    statusCode = 500;
+    response = "Something went wrong";
+  }
+
+  return {
+    statusCode: statusCode,
+    records: response,
+  };
+}
+
+module.exports = { getNYCStudentsList };
