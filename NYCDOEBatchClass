@@ -1,0 +1,121 @@
+public class SyncStudentNYCDOEData implements Database.Batchable<Object>, Database.AllowsCallouts, Database.Stateful {
+
+    public List<Student__c> studentList = new List<Student__c>();
+    public Integer offsetValue;
+    public Integer limits = 500;
+
+    //-------------------------------------------Constructor--------------------------------------------------------------
+    // Constructor to get the incremented Offset Value every time Class Rerun
+    public SyncStudentNYCDOEData(Integer offsetValue) {
+        System.debug('offsetValue' + offsetValue);
+        this.offsetValue = offsetValue;        
+    }
+
+    //---------------------------------------------------Start Method-----------------------------------------------------
+    public Iterable<Object> start(Database.BatchableContext context) {        
+        System.debug('Inside Start');
+
+        List<Object> apiJsonList = new List<Object>();
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setTimeout(120000);
+
+        //---------------------------------------------------------------------------------------------------------
+        // API execution to fetch NYC DOE records from nyc-doe-prod database
+        String endpointUrl = 'https://ny67869sad.execute-api.us-east-2.amazonaws.com/production/nyc-doe-students?offset=' + offsetValue + '&limit=' + limits;
+        System.debug('endpoint' + endpointUrl);
+        request.setEndpoint(endpointUrl);
+        request.setMethod('GET');
+        request.setHeader('Authorization', 'r?ftDEZ_qdt=VjD#W@S2LM8FZT97Nx');
+        HttpResponse apiResponse = http.send(request);
+
+        System.debug('apiResponse: ' + apiResponse);
+        if (apiResponse.getStatusCode() == 200) {
+            
+            Map<String, Object> apiResponseMap = (Map<String, Object>) JSON.deserializeUntyped(apiResponse.getBody());
+            List<Object> responseData = (List<Object>) apiResponseMap.get('records');
+            
+            //Adding responseData to a list
+            apiJsonList.addAll(responseData);            
+            System.debug('apijsonlist' + apiJsonList.size());
+        } 
+        return apiJsonList;
+    }
+
+    //------------------------------------------------Batch Execution Method---------------------------------------------------------
+    // Mapping the responseData
+    public void execute(Database.BatchableContext context, List<Object> scope) { 
+        System.debug('Inside Method::::::: execute'); 
+
+        Map<String, Student__c> studentMap = new Map<String, Student__c>();
+        List<String> studentIdsFromApiResponse = new List<String>(); // preparing list of student ids to manage upsert
+
+        // Extract student IDs from API response for querying existing records
+        for (Object obj : scope) {
+            Map<String, Object> recordMap = (Map<String, Object>) obj;
+            String studentId = String.valueOf(recordMap.get('Student_ID__c'));
+            studentIdsFromApiResponse.add(studentId);
+        }
+
+        // Fetch existing records based on Student_ID__c
+        List<Student__c> existingStudents = [SELECT Id, Student_ID__c FROM Student__c WHERE Student_ID__c IN :studentIdsFromApiResponse];
+
+        // Collecting Student Records in the StudentMap 
+        for (Student__c existingStudent : existingStudents) {
+            studentMap.put(existingStudent.Student_ID__c, existingStudent);
+        } 
+
+        // Looping over API Response
+        for (Object obj : scope) {
+            Map<String, Object> recordMap = (Map<String, Object>) obj;
+            // Extract student from a student JSON object
+            String studentId = String.valueOf(recordMap.get('Student_ID__c'));
+            Student__c studentLog = studentMap.get(studentId);
+
+            if (studentLog == null) {
+                studentLog = new Student__c();
+                studentLog.Student_ID__c = studentId;
+            }
+
+            // Assigning api response to instance of object dynamically, mapping the API response to Salesforce field for each record
+            for (String fieldName : recordMap.keySet()) {     
+                if (fieldName != 'Clean_Update__c') {
+                    // Dynamically adding with fieldname
+                    System.debug('fieldname' + fieldName);
+                    studentLog.put(fieldName, recordMap.get(fieldName)); 
+                } else {
+                        // Converting to the date format
+                        String apiDateStr = (String) recordMap.get(fieldName);
+                        if (apiDateStr != null) {
+                            Date apiDate = Date.valueOf(apiDateStr);
+                            studentLog.put(fieldName, apiDate);
+                        }
+                    
+                }                   
+        }
+            // Preparing list of all student records to process in apex job
+            studentList.add(studentLog);
+        }
+    }
+
+    //-------------------------------------------------------------------------------------------------------------------------
+    // Upserting Records in the finish method 
+    public void finish(Database.BatchableContext context) {
+        System.debug('Batch job finished.' + offsetValue);
+		System.debug('studentList'+ studentList.size());
+        // If studentList will contain records, the class will rerun with incremented offset
+        if (!studentList.isEmpty()) {
+            System.debug('inside condition');
+
+            // Upserting Records based on Student_ID__c
+            Database.UpsertResult[] results = Database.upsert(studentList, Student__c.Fields.Student_ID__c, false);
+            System.debug('result' + results);
+
+            // Incrementing offset and calling the class again with incremented offset
+                offsetValue += 500;
+                System.debug('offsetValue' + offsetValue);                 
+                SyncStudentNYCDOEData stu = new SyncStudentNYCDOEData(offsetValue);     
+                Database.executeBatch(stu, 200);
+        }      
+    }    
+}
