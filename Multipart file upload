@@ -1,0 +1,236 @@
+const AWS = require('aws-sdk');
+const s3Secret = require("../services/s3-secret-manager");
+const { v4: uuidv4 } = require("uuid");
+
+//---------------------------------------------------------------------------------------------
+// // Function to upload a file to S3 bucket using multipart upload
+// async function uploadFileToS3Bucket(event) {
+//         try {
+//                 // Retrieve the S3 instance using the secret manager
+//                 const s3 = await s3Secret.setSecret();
+
+//                 // Parse incoming JSON payload
+//                 const body = typeof event.body === 'string' ? JSON.parse(event.body) : event.body;
+//                 const { base64Data, fileName, fileExtension, bucket } = body;
+
+//                 // Generate a unique reference ID for the file
+//                 let refId = `${Date.now()}-${uuidv4()}`;
+
+//                 // Generate the key (filename) for the uploaded file
+//                 const key = fileExtension
+//                         ? `${refId}.${fileExtension}`
+//                         : `${refId}_${fileName}`;
+
+//                 // Determine content type of the file based on its extension
+//                 const contentType = await getContentType(fileName);
+
+//                 // Initialize multipart upload
+//                 const multipartParams = {
+//                         Bucket: bucket,
+//                         Key: key,
+//                         ContentType: contentType,
+//                         ACL: 'public-read-write',
+//                 };
+
+//                 const uploadId = await s3.createMultipartUpload(multipartParams).promise();
+
+//                 // Convert base64 data to a buffer
+//                 const buffer = Buffer.from(base64Data, 'base64');
+//                 const partSize = 2 * 1024 * 1024; // 5MB part size (adjust as needed)
+//                 const numParts = Math.ceil(buffer.length / partSize);
+
+//                 const uploadPromises = [];
+
+//                 // Upload each part asynchronously
+//                 for (let i = 0; i < numParts; i++) {
+//                         const start = i * partSize;
+//                         const end = Math.min(start + partSize, buffer.length);
+
+//                         const partParams = {
+//                                 Body: buffer.slice(start, end),
+//                                 Bucket: bucket,
+//                                 Key: key,
+//                                 PartNumber: i + 1,
+//                                 UploadId: uploadId.UploadId,
+//                         };
+
+//                         const uploadPromise = s3.uploadPart(partParams).promise();
+//                         uploadPromises.push(uploadPromise);
+//                 }
+
+//                 // Wait for all parts to upload
+//                 const uploadResponses = await Promise.all(uploadPromises);
+
+//                 // Gather ETags for each uploaded part
+//                 const parts = uploadResponses.map((data, index) => ({
+//                         ETag: data.ETag,
+//                         PartNumber: index + 1,
+//                 }));
+
+//                 // Complete multipart upload
+//                 const completedParams = {
+//                         Bucket: bucket,
+//                         Key: key,
+//                         MultipartUpload: { Parts: parts },
+//                         UploadId: uploadId.UploadId,
+//                 };
+
+//                 const completedUpload = await s3.completeMultipartUpload(completedParams).promise();
+
+//                 console.log('File upload complete:', completedUpload.Location);
+
+//                 return {
+//                         statusCode: 200,
+//                         body: {
+//                                 location: completedUpload.Location,
+//                                 key: key,
+//                         },
+//                 };
+//         } catch (error) {
+//                 console.error('Error uploading file to S3:', error);
+//                 return {
+//                         statusCode: 500,
+//                         body: 'Internal Server Error',
+//                 };
+//         }
+// }
+
+// //---------------------------------------------------------------------------------------------
+// // Function to determine content type based on file extension
+async function getContentType(fileName) {
+        const ext = fileName.split('.').pop().toLowerCase();
+
+        const contentType = {
+                jpg: 'image/jpeg',
+                jpeg: 'image/jpeg',
+                png: 'image/png',
+                gif: 'image/gif',
+                bmp: 'image/bmp',
+                pdf: 'application/pdf',
+                txt: 'text/plain',
+                html: 'text/html',
+                css: 'text/css',
+                js: 'application/javascript',
+                json: 'application/json',
+                xml: 'application/xml',
+                mp3: 'audio/mpeg',
+                wav: 'audio/wav',
+                mp4: 'video/mp4',
+                avi: 'video/x-msvideo',
+                csv: 'text/csv',
+                xls: 'application/vnd.ms-excel',
+                xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                ods: 'application/vnd.oasis.opendocument.spreadsheet',
+                odt: 'application/vnd.oasis.opendocument.text',
+                ppt: 'application/vnd.ms-powerpoint',
+                zip: 'application/zip',
+                rar: 'application/x-rar-compressed',
+                svg: 'image/svg+xml',
+                tiff: 'image/tiff',
+                doc: 'application/msword',
+                docx: 'application/msword',
+                odf: 'application/vnd.oasis.opendocument.text',
+                odp: 'application/vnd.oasis.opendocument.presentation',
+                odg: 'application/vnd.oasis.opendocument.graphics',
+                csv: 'text/csv',
+                ics: 'text/calendar',
+                psd: 'image/vnd.adobe.photoshop',
+        };
+
+        return contentType[ext] || 'application/octet-stream'; // Default to binary data if type is not found
+}
+
+
+async function uploadFileToS3Bucket(event) {
+        try {
+                const s3 = await s3Secret.setSecret();
+                const { fileName, fileExtension, bucket } = event.body;
+                let refId = `${Date.now()}-${uuidv4()}`;
+                const key = fileExtension ? `${refId}.${fileExtension}` : `${refId}_${fileName}`;
+                const contentType = await getContentType(fileName);
+
+                const params = {
+                        Bucket: bucket,
+                        Key: key,
+                        ContentType: contentType,
+                        ACL: 'public-read-write',
+                };
+
+                const uploadId = await s3.createMultipartUpload(params).promise();
+
+                return {
+                        statusCode: 200,
+                        body: { uploadId: uploadId.UploadId, key },
+                };
+        } catch (error) {
+                console.error('Error initiating multipart upload:', error);
+                return {
+                        statusCode: 500,
+                        body: 'Internal Server Error at uploadFileToS3Bucket',
+                };
+        }
+}
+
+
+// Function to upload a part
+async function uploadPart(event) {
+        try {
+                const s3 = await s3Secret.setSecret();
+                const { bucket, key, partNumber, uploadId, base64Data } = event.body;
+                const buffer = Buffer.from(base64Data, 'base64');
+
+                const params = {
+                        Body: buffer,
+                        Bucket: bucket,
+                        Key: key,
+                        PartNumber: partNumber,
+                        UploadId: uploadId,
+                };
+
+                const uploadPartResponse = await s3.uploadPart(params).promise();
+
+                return {
+                        statusCode: 200,
+                        body: { ETag: uploadPartResponse.ETag, PartNumber: partNumber },
+                };
+        } catch (error) {
+                console.error('Error uploading part:', error);
+                return {
+                        statusCode: 500,
+                        body: 'Internal Server Error at uploadPart',
+                };
+        }
+}
+
+
+// Function to complete multipart upload
+async function completeMultipartUpload(event) {
+        try {
+                const s3 = await s3Secret.setSecret();
+                const { bucket, key, uploadId, parts } = event.body;
+
+                const params = {
+                        Bucket: bucket,
+                        Key: key,
+                        MultipartUpload: { Parts: parts },
+                        UploadId: uploadId,
+                };
+
+                const completedUpload = await s3.completeMultipartUpload(params).promise();
+
+                return {
+                        statusCode: 200,
+                        body: { location: completedUpload.Location },
+                };
+        } catch (error) {
+                console.error('Error completing multipart upload:', error);
+                return {
+                        statusCode: 500,
+                        body: 'Internal Server Error at completeMultipartUpload.',
+                };
+        }
+}
+
+exports.uploadFileToS3Bucket = uploadFileToS3Bucket;
+exports.uploadPart = uploadPart;
+exports.completeMultipartUpload = completeMultipartUpload;
