@@ -1,0 +1,64 @@
+const { Op } = require("sequelize");
+const { sequelize } = require("../../services/sequelize");
+const FamiliesApp = require("../../models/familiy-app");
+
+// Function to get Families App
+async function getFamiliesApp(event) {
+  console.log("getFamiliesApp::::::::::::::", event);
+
+  let response = [];
+  let statusCode = 200;
+
+  if (event.School_Id == undefined || event.School_Id == "") {
+    statusCode = 403;
+    response = "Please specify School Id";
+    return {
+      statusCode,
+      response,
+    };
+  }
+
+  if (event.offset == undefined || event.offset == "") {
+    event.offset = 0;
+  }
+
+  if (event.limit == undefined || event.limit == "") {
+    event.limit = 50;
+  }
+
+  try {
+    //-------------------------------------------------------------------------------------------------
+    const results = await FamiliesApp.findAll({
+      where: {
+        School_App__c: event.School_Id,
+        Active_Status__c: {
+          [Op.or]: {
+            [Op.ne]: "Hide",
+            [Op.is]: null,
+          },
+        },
+      },
+      order: [[sequelize.cast(sequelize.col("Sort_Order__c"), "DOUBLE PRECISION"), "ASC"]],
+      offset: event.offset,
+      limit: event.limit,
+    });
+
+    console.log("Returning Families App Results....");
+
+    // Add ObjectName key to each record in the results
+    const modifiedResults = results.map(record => ({
+      ...record.dataValues,
+      Object_Name: "Families_App__c",
+    }));
+
+    response = modifiedResults;
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    statusCode = 500;
+    response = "Something went wrong";
+  } finally {
+    return { statusCode: statusCode, body: response };
+  }
+}
+
+module.exports = { getFamiliesApp };
