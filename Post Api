@@ -1,0 +1,129 @@
+// const { QueryTypes, Op, literal } = require("sequelize");
+// const { sequelize } = require("../../services/sequelize");
+const Result = require("../../models/result");
+const ResultAttachments = require("../../models/result-attachments")
+
+async function saveResult(event) {
+  console.log(
+    "Inside saveResult::::::::::::::::::::::",
+    JSON.stringify(event.body)
+  );
+
+  let response = [];
+  let statusCode = 200;
+
+  try {
+    if (
+      event.role === undefined ||
+      event.role === "" ||
+      event.role.toLowerCase() == "student"
+    ) {
+      statusCode = 403;
+      response = "You are not authorized to perform this action";
+      return { statusCode, response };
+    }
+
+    const resultsArray = Array.isArray(event.body) ? event.body : [event.body];
+
+    for (const result of resultsArray) {
+      let upsertResponse = await upsertResult(result);
+
+      // Add attachments if provided
+      if (result.Attachments && result.Attachments.length > 0) {
+        const attachmentPromises = result.Attachments.map(attachment =>
+          ResultAttachments.upsert({
+            Id: attachment.Id,
+            Result_Id: upsertResponse,
+            Attachment_URL: attachment.Attachment_URL,
+            Sorting_Order: attachment.Sorting_Order,
+            Status: "Active",
+            UpdatedAt: new Date().toISOString(),
+          },
+            {
+              conflictFields: ["Id"], // specify the conflict target
+              returning: true, // returns the updated record
+              fields: [
+                "Id",
+                "Result_Id",
+                "Attachment_URL",
+                "Sorting_Order",
+                "Status",
+                "UpdatedAt"
+              ],
+            })
+        );
+
+        await Promise.all(attachmentPromises);
+      } else {
+        // If no attachments are present, use Assessment_Image__c from event.body
+        if (event.body.Assessment_Image__c) {
+          await ResultAttachments.create({
+            Result_Id: upsertResponse,
+            Attachment_URL: event.body.Assessment_Image__c,
+            Status: "Active",
+          });
+        }
+      }
+    }
+
+    response = "Records upserted sucessfully!";
+  } catch (error) {
+    console.error("Error retrieving data:", error);
+    statusCode = 500;
+    response = "Something went wrong";
+  } finally {
+    return { statusCode: statusCode, body: response };
+  }
+}
+
+async function upsertResult(event) {
+  const [record, created] = await Result.upsert(
+    {
+      UID: event.Id, // assuming UID is the unique key
+      Date__c: event.Date__c,
+      Result__c: event.Result__c,
+      Student__c: event.Student__c,
+      Student_Name__c: event.Student_Name__c,
+      Assessment_Image__c: event.Assessment_Image__c,
+      Assessment_Id: event.Assessment_Id,
+      Feedback: event.Feedback,
+      Confidence: event.Confidence,
+      Rationale: event.Rationale,
+      Introspection: event.Introspection,
+      Revised_Result__c: event.Revised_Result__c,
+      Revised_Student__c: event.Revised_Student__c,
+      Revised_Student_Name__c: event.Revised_Student_Name__c,
+      Revised_Feedback: event.Revised_Feedback,
+      Student_Selection: event.Student_Selection,
+      Status: "active",
+      UpdatedAt: new Date().toISOString(),
+    },
+    {
+      conflictFields: ["UID"], // specify the conflict target
+      returning: true, // returns the updated record
+      fields: [
+        "UID",
+        "Date__c",
+        "Result__c",
+        "Student__c",
+        "Student_Name__c",
+        "Assessment_Image__c",
+        "Assessment_Id",
+        "Feedback",
+        "Confidence",
+        "Rationale",
+        "Introspection",
+        "Revised_Result__c",
+        "Revised_Student__c",
+        "Revised_Student_Name__c",
+        "Revised_Feedback",
+        "Student_Selection",
+        "Status",
+        "UpdatedAt"
+      ],
+    }
+  );
+  return record.UID;
+}
+
+module.exports = { saveResult };
