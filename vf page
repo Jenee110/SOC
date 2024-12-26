@@ -1,0 +1,923 @@
+<apex:page id="pageID" standardController="iOS_and_Android_App_Details__c" extensions="tdc_tsw.SendBulkSMSCOLightning"
+           recordSetVar="sgroup" standardStylesheets="true" sidebar="false" showHeader="false">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+    
+    <style>
+        *{
+        font-family: 'Salesforce Sans',Arial,sans-serif;
+        }
+        
+        .bPageBlock .labelCol,
+        body .print .topics-label {
+        font-size: 14px;
+        }
+        
+        body .bPageBlock .pbHeader, body .bEditBlock .pbBottomButtons>table, body .apexp .bPageBlock.apexDefaultPageBlock .pbBottomButtons>table {
+        background-color: #F4F6F9;
+        }
+        
+        
+        body .bPageBlock, body .bPageBlock .pbBody, body .bPageBlock .pbBottomButtons {
+        background-color: white !important;
+        }
+        
+        input[type=text],input[type=datetime-local], select, textarea {
+        height : 35px;
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        resize: none;
+        }        
+        
+        .body .bPageBlock,body #bodyCell .bResource .secondaryPalette,body .secondaryPalette.bPageBlock,body .individualPalette .secondaryPalette.bPageBlock,body .bodyDiv .genericTable,body .genericPageBlockTable,body .bodyDiv .bSubBlock,body .bComponentBlock .bPageBlock,body .bMyDashboard .bPageBlock,body.rlHoverFrame .bPageBlock,body.subjectSelectionPopup div.choicesBox,body.lookupTab .secondaryPalette.bPageBlock,body.popupTab .secondaryPalette.bPageBlock,body.UserTagStatsPage .secondaryPalette.bPageBlock {
+        width: 40%;
+        margin: auto;
+        }
+        
+        .bEditBlock .pbHeader>table>tbody>tr>td, .bPageBlock .pbHeader>table>tbody>tr>td, .bLayoutBlock .pbHeader>table>tbody>tr>td, .bEditBlock .pbBottomButtons>table>tbody>tr>td, .bPageBlock .pbBottomButtons>table>tbody>tr>td, .bLayoutBlock .pbBottomButtons>table>tbody>tr>td {
+        padding: 5px 10%;
+        }
+        
+        .listRelatedObject .bPageBlock .pbHeader .btn, .listRelatedObject .bPageBlock .pbBottomButtons .btn, .apexp .bPageBlock .pbHeader .btn, .apexp .bPageBlock .pbBottomButtons .btn, div.buttons .btn, div.pbBottomButtons>.btn, #sendButton, #cancleButton {
+        padding: 7px;
+        }
+        
+        .pbButton {
+        display : none;
+        }
+        
+        .mainTitle, #headingMain, .pbTitle  {
+        text-align: center;
+        font-weight: 500;
+        font-size: 1.3em !important;
+        }
+        
+        .bPageBlock .detailList textarea {
+        resize: both;
+        width: 80%;
+        }
+        
+        .mainForm{
+        margin-left: 2%;
+        margin-right: 2%;
+        }
+        
+        .mTitle, .mDescription, .launchURL, .imageURL, .dateAndTime, pushMessage {
+        font-size: 16px;
+        }
+        
+        .pushMessage{
+        font-size: 15px;
+        }
+        
+        .pinPushMessage {
+        margin-left: 5px;
+        }
+        
+        .titleDiv, .msgDiv, .imgDiv, .urlDiv, .dateAndTimeDiv, pinPushMessage, pinDateField {
+        padding-bottom: 15px;
+        }
+        
+        
+        #messageTitle {
+        width: 100%;
+        font-size: 14px;
+        }
+        
+        #messageBody {
+        width: 100%;
+        height: 200px;
+        font-size: 14px;
+        }
+        
+        .error-msg, #errormsg {
+        display : block;
+        margin: 20px 0;
+        padding: 10px;        	
+        border-radius: 3px 3px 3px 3px;
+        color: #FFFFFF;
+        background-color: #c23934;
+        text-align: center;
+        font-size: .8rem;
+        }
+        .errorSelectItem{
+        margin-left: 0 !important;
+        }
+        
+        .modal {
+        display: none;
+        position: fixed; 
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%; 
+        height: 100%;
+        overflow: auto; 
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0,0.4); 
+        }
+        
+        
+        .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        }
+        
+        /* The Close Button */
+        .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        }
+        
+        .close:hover, .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+        }
+        
+        .card {
+        background: white;
+        padding: 45px;
+        border-radius: 4px;
+        box-shadow: 0 2px 3px #C8D0D8;
+        display: inline-block;
+        margin: 0 auto;
+        margin-left: 40%;
+        }
+        
+        h1 {
+        color: #4a9cdd;
+        font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+        font-weight: 900;
+        font-size: 40px;
+        margin-left: 29%;
+        }
+        
+        p {
+        color: #404F5E;
+        font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+        font-size:20px;
+        margin: 0;
+        }
+        i {
+        color: #4a9cdd;
+        font-size: 100px;
+        line-height: 200px;
+        margin-left:25%;
+        }
+        .button {
+        background-color: #4194f9;
+        border: none;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        margin-left: 40%;
+        margin-top: 5%;
+        width: 20%; 
+        border-radius: 5px;
+        cursor: pointer;
+        }
+        
+        .btn, .button, .formulaButton, .btnWhatsNew {
+        background-image : url("") !important;
+        }
+        
+        .loader{
+        position: fixed;
+        top: 0;
+        bottom: 0%;
+        left: 0;
+        right: 0%;
+        z-index: 99;
+        height:100%;
+        opacity:0.7;
+        display:none;
+        background: lightgrey url('https://the-noun-project-icons.s3.us-east-2.amazonaws.com/TediousCookedFunnelweaverspider-max-1mb.gif') center center no-repeat;
+        background-size: 50px 50px;
+        }
+        
+        .pollloader{
+        position: fixed;
+        top: 0;
+        bottom: 0%;
+        left: 0;
+        right: 0%;
+        z-index: 9999;
+        height:100%;
+        opacity:0.7;
+        display:none;
+        background: lightgrey url('https://the-noun-project-icons.s3.us-east-2.amazonaws.com/TediousCookedFunnelweaverspider-max-1mb.gif') center center no-repeat;
+        background-size: 50px 50px;
+        }
+        
+        .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        }
+        
+        h1.pollHeading {
+        color: black !important; 
+        font-weight: 700;
+        font-size: 25px;
+        margin-left: 37%;
+        }
+        
+        h2.activeUntilText{
+        font-size: 14px;
+        }
+        
+        #pollPopup {
+        display: none;
+        position: fixed;
+        top: 13%;
+        left: 29%;
+        width: 40%;
+        max-height: 80%; /* Set max-height to fit in the screen */
+        background: #fff;
+        border: 1px solid #ccc;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        overflow-y: auto; /* Allow vertical scrolling if the content is too long */
+        }
+        
+        body.modal-open {
+        overflow: hidden; /* Prevent body scroll when popup is open */
+        }
+        
+        #pollPopup .pollHeading {
+        text-align: center; /* Ensure poll heading is centered */
+        }
+        
+        @media (max-width: 1300px) {
+        #pollPopup {
+        top: 2%;  
+        width: 40%;
+        }
+        
+        label{
+        font-size: 13px;
+        }
+        }
+        
+        label{
+        font-size: 14px;
+        }
+        
+        .pollbtn{
+        color: #333;
+        margin: 1px;
+        padding: 8px 8px;
+        border: 1px solid #b5b5b5;
+        border-bottom-color: #7f7f7f;
+        font-weight: bold;
+        font-size: 0.7rem;
+        border-radius: 3px;
+        }
+        
+        .activeDateTime{
+        width: -webkit-fill-available;
+        height: 31px;
+        padding: 0px 8px;
+        }
+        
+        .pollbtn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        opacity: 0.6; /* Optional for a faded look */
+        }
+        
+        /* Hide the date input field initially */
+        #pinDateField {
+        display: none;
+        margin-left: 3px;
+        margin-top: 12px;
+        }
+        
+        input#pinPushDate {
+        margin-top: 11px;
+        height: 35px;
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        resize: none;
+        }
+        
+        .removeOptionIcon {
+        cursor: pointer;
+        color: red;
+        font-size: 20px;
+        font-weight: bold;
+        position: absolute;
+        margin-top: 16px;
+        margin-left: 12px;
+        }
+        
+    </style>
+    
+    <!-- Use to show card popup on notification success -->
+    <div id="cardModal" class="modal">
+        <div class="card">
+            <div style="border-radius:200px; height:200px; width:200px; background: #f3f5f7; margin:0 auto;">
+                <i class="checkmark">✓</i>
+            </div>
+            <h1>Success</h1> 
+            <p>Notification has been sent successfully</p>
+            <div id="successBtn" class="button" onclick="window.history.go(-1)">Ok</div>
+        </div>
+    </div>
+    
+    <!-- Use to show loader on clicking on send button-->
+    <div id="loader" class="loader"></div>
+    <!-- Use to show loader on clicking on save poll button-->
+    <div id="pollloader" class="pollloader"></div>
+    
+    <script>
+    // Ids for selected objects.
+    var ids = '{!JSENCODE(ids)}';
+    
+    // Split the IDs by commas
+    var idArray = ids.split(',');
+    var pollQuestionId;
+    
+    // Iterate through the IDs and remove characters after the first slash in case found any //e.g.11111/00B4W00000ETGSBUA5/iOS_and_Android_App_Details__c
+    for (var i = 0; i < idArray.length; i++) {
+        idArray[i] = idArray[i].split('/')[0]; // Get the part before the first slash
+    }
+    
+    // Join the modified IDs back into a comma-separated string
+    ids = idArray.join(',');
+    console.log('Select Ids to send notifications on::::'+ids);  
+    
+    //Date to schedule notification
+    var date = new Date();     
+    var today = new Date().toISOString();
+    
+    var modal = document.getElementById("cardModal");    
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        // Your code here
+        document.getElementById("pinPushCheckbox").addEventListener("change", function() {
+            var pinDateField = document.getElementById("pinDateField");
+            
+            // Check if checkbox is checked
+            if (this.checked) {
+                // Show the date input field
+                pinDateField.style.display = "block";
+            } else {
+                // Hide the date input field
+                pinDateField.style.display = "none";
+            }
+        });
+    });
+    
+    // Will trigger the micro-service that will be responsible for sending the same Push notifciation all the selected Schools.
+    function sendPushNotification() {
+        $(document).ready(function () {
+            jQuery(".loader").show();
+        });
+        return new Promise((resolve, reject) => {
+            let messageTitle = document.getElementById('messageTitle').value;
+            let messageBody = document.getElementById('messageBody').value;
+            let imageUrl = document.getElementById('imageUrl').value;
+            let launchUrl = document.getElementById('launchUrl').value;
+            let dateAndTime = document.getElementById('schedule-time').value;
+            let pinPushCheckbox = document.getElementById("pinPushCheckbox").checked;
+            let pinEndDate = document.getElementById("pinPushDate").value;
+            var formatDate = new Date(dateAndTime);
+            var pinExpireTime = "23:59";
+            
+            var date = "";
+            var time = "";
+            
+            if (!isNaN(formatDate.getTime())) {
+            // Extracting the date part
+            var year = formatDate.getFullYear();
+            var month = formatDate.getMonth() + 1; // Months are zero-based
+            var day = formatDate.getDate();
+            date = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+            
+            // Extracting the time part in 24-hour format
+            var hours = formatDate.getHours();
+            var minutes = formatDate.getMinutes();
+            var seconds = formatDate.getSeconds();
+            time = (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+        }
+                           
+                           console.log('Date:', date);
+        console.log('Time:', time);        
+        
+        if(pollQuestionId == undefined){
+            pollQuestionId = null;
+        }
+        
+        if(pinEndDate == undefined && pinExpireTime == undefined){
+            pinEndDate = null;
+            pinExpireTime = null;
+        }
+        
+        console.log('pollQuestionId:', pollQuestionId);
+        console.log('pinPushCheckbox::::::', pinPushCheckbox);
+        console.log('pinEndDate::::::', pinEndDate);
+        console.log('pinExpireTime:::::::', pinExpireTime);
+        
+        
+        var pinPushCheckboxValue = pinPushCheckbox ? "true" : "false"; // Convert Boolean to string
+        
+        var requestBody = {
+            "ids": idArray,
+            "title": messageTitle,
+            "message": messageBody,
+            "imageUrl": imageUrl,
+            "url": launchUrl,
+            "scheduleDate": date,
+            "scheduleTime": time,
+            "pinExpireDate": pinEndDate,
+            "pinExpireTime": pinExpireTime,
+            "pinned": pinPushCheckboxValue,
+            "pollQuestionId" : pollQuestionId
+        };
+        
+        console.log("Request body:", JSON.stringify(requestBody));
+        
+        var response = fetch('https://9nwyf9euuf.execute-api.us-east-2.amazonaws.com/prod/send-mass-push-notifications', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'r?ftDEZ_qdt=VjD#W@S2LM8FZT97Nx',
+                'Content-Type': 'application/json',                 // Access token to authorize micro-service. TODO:: Save this to somewhere secure.
+            },
+            body: JSON.stringify(requestBody),
+        });
+        response.then(
+            function(result) {
+                $(document).ready(function () {
+                    jQuery(".loader").hide();
+                });                                    
+                console.log('result:::::::::::' + JSON.stringify(result));
+                if(result["status"]==200){
+                    console.log('API Success:::::::::::');
+                    modal.style.display = "block";
+                }
+            }, function(err) {
+                console.log('Error:::::::::::' + err);
+                document.write(err);
+            })                
+    });
+    }
+    
+    function myFunction() {
+        let confirmation1 = "Are you sure you want to send this Push Notification to all the selected Schools?";
+        if (confirm(confirmation1) == true) {
+            let confirmation2 = "You cannot undo this action. Continue?";
+            if (confirm(confirmation2) == true) {
+                sendPushNotification();   
+            }
+        }
+    }    
+    
+    //  Calling the function to show title and message fields are mandatory   
+    function showFieldMandatory() {
+        var date = new Date();
+        var today = new Date().toISOString();
+        
+        var error1 = document.getElementById("error1");
+        var error2 = document.getElementById("error2");
+        var title = document.getElementById("messageTitle");
+        var body = document.getElementById("messageBody");
+        
+        var hasError = false;
+        
+        // Validate message title
+        if (title.value == "") {
+            error1.textContent = "Field is required";
+            error1.style.color = "red";
+            title.style.border = '2px solid red';
+            error1.style.display = 'block';
+            hasError = true;
+        } else {
+            title.style.border = '1px solid #ccc';
+            error1.style.display = 'none';
+        }
+        
+        // Validate message body
+        if (body.value == "") {
+            error2.textContent = "Field is required";
+            error2.style.color = "red";
+            body.style.border = '2px solid red';
+            error2.style.display = 'block';
+            hasError = true;
+        } else {
+            body.style.border = '1px solid #ccc';
+            error2.style.display = 'none';
+        }
+        
+        // If there are no errors, proceed with the notification
+        if (!hasError) {
+            if (document.getElementById("schedule-time").value == "") {
+                myFunction();
+            } else {
+                myFunction();
+            }
+        }
+    }
+    
+    function dateChange(){
+        date = new Date();     
+        today = new Date().toISOString();
+        
+        console.log("test" + document.getElementById("schedule-time").value);
+        if(document.getElementById("schedule-time").value==""){
+            console.log("Inside else if datechnage()");
+            document.getElementById('schedule-time').style.border= '1px solid #ccc';
+            document.getElementById('errorDate').style.display= 'none';
+        }
+        else if (document.getElementById("schedule-time").value < today.split(".")[0].substring(0,16))
+        {
+            document.getElementById('schedule-time').style.border= '2px solid red';
+            errorDate.textContent = "You cannot select date and time less than current date and time";
+            errorDate.style.color = "red"
+            document.getElementById('errorDate').style.display= 'block';
+        }
+            else if(document.getElementById("schedule-time").value.split("T")[0] == today.split(".")[0].substring(0,16).split("T")[0] && document.getElementById("schedule-time").value.split("T")[1] <=  date.toString().split(" ")[4].substring(0,5)) { 
+                // if(document.getElementById("schedule-time").value.split("T")[1] <  date.toString().split(" ")[4].substring(0,5)){
+                document.getElementById('schedule-time').style.border= '2px solid red';
+                errorDate.textContent = "You cannot schedule notification for current or smaller time for current date";
+                errorDate.style.color = "red"    
+                document.getElementById('errorDate').style.display= 'block';
+            }
+                else{
+                    console.log("Inside else datechnage()");
+                    document.getElementById('schedule-time').style.border= '1px solid #ccc';
+                    document.getElementById('errorDate').style.display= 'none';
+                }
+    }
+    
+    
+    function hideError(fieldId, errorId) {
+        var field = document.getElementById(fieldId);
+        var error = document.getElementById(errorId);
+        if (field.value !== "") {
+            error.style.display = 'none';
+            field.style.border = '1px solid #ccc';
+        }
+    }
+    
+    function showPollPopup() {
+        document.getElementById('pollPopup').style.display = 'block';
+        document.body.classList.add('modal-open'); // Prevent background scrolling
+    }
+    
+    function closePollPopup() {
+        document.getElementById('pollPopup').style.display = 'none';
+        document.body.classList.remove('modal-open'); // Allow background scrolling again
+    }
+    
+    let pollOptionCount = 2;
+    
+    function addPollOption() {
+        const pollOptions = document.getElementById('pollOptions');
+        const addOptionButton = document.querySelector('.pollbtn');
+        
+        // Dynamically calculate the current count of poll options
+        const currentOptionCount = pollOptions.querySelectorAll('.pollOption').length;
+        
+        // Ensure we don't add more than 5 options
+        if (currentOptionCount < 5) {
+            const newOptionCount = currentOptionCount + 1;
+            
+            // Create a new option div
+            const newOption = document.createElement('div');
+            newOption.className = 'pollOption';
+            newOption.id = `optionDiv${newOptionCount}`;
+            newOption.innerHTML = `
+            <label for="option${newOptionCount}">Option ${newOptionCount}</label>
+                <input type="text" id="option${newOptionCount}" placeholder="Enter option ${newOptionCount}">
+                <span class="removeOptionIcon" onclick="removePollOption(${newOptionCount})">&times;</span>
+                `;
+                
+                // Insert the new option before the add button
+                pollOptions.insertBefore(newOption, addOptionButton);
+            
+            // Disable the add button if the max options are reached
+            if (newOptionCount === 5) {
+                addOptionButton.disabled = true;
+                addOptionButton.style.cursor = 'not-allowed'; // Optional: Change cursor style
+            }
+        }
+    }
+    
+    function removePollOption(optionNumber) {
+        // Find and remove the corresponding option div
+        const optionDiv = document.getElementById(`optionDiv${optionNumber}`);
+        if (optionDiv) {
+            optionDiv.remove();
+            
+            // Re-enable the add option button if it's disabled
+            const addOptionButton = document.querySelector('.pollbtn');
+            const currentOptionCount = document.querySelectorAll('.pollOption').length;
+            if (currentOptionCount < 5) {
+                addOptionButton.disabled = false;
+                addOptionButton.style.cursor = 'pointer'; // Reset cursor
+            }
+            
+            // Re-number the remaining options
+            renumberPollOptions();
+        }
+    }
+    
+    function renumberPollOptions() {
+        const pollOptions = document.querySelectorAll('.pollOption');
+        let dynamicOptionCount = 1; // Start numbering from Option 1
+        
+        // Loop through all poll options
+        pollOptions.forEach((optionDiv) => {
+            const optionLabel = optionDiv.querySelector('label');
+            const optionInput = optionDiv.querySelector('input');
+            const removeIcon = optionDiv.querySelector('.removeOptionIcon');
+            
+            // Renumber each option
+            optionDiv.id = `optionDiv${dynamicOptionCount}`;
+                            optionLabel.textContent = `Option ${dynamicOptionCount}`;
+                            optionInput.id = `option${dynamicOptionCount}`;
+                            optionInput.placeholder = `Enter option ${dynamicOptionCount}`;
+                            removeIcon.setAttribute('onclick', `removePollOption(${dynamicOptionCount})`);
+        
+        dynamicOptionCount++;
+    });
+    }
+    
+    
+    // Function to display error message below a specific field
+    function showError(fieldId, message) {
+        const errorElement = document.getElementById(`${fieldId}Error`);
+        if (errorElement) {
+            errorElement.textContent = message; // Set the error message
+            errorElement.style.display = 'block'; // Make sure it's visible
+        }
+    }
+    
+    // Function to hide error message for a specific field
+    function hideError(fieldId) {
+        const errorElement = document.getElementById(`${fieldId}Error`);
+        if (errorElement) {
+            errorElement.style.display = 'none'; // Hide the error message
+        }
+    }
+    
+    function savePoll() {
+        const pollQuestion = document.getElementById('pollQuestion').value.trim();
+        if (!pollQuestion) {
+            showError('pollQuestion', 'Please enter a poll question!');
+            return;
+        } else {
+            hideError('pollQuestion');
+        }
+        
+        const options = [];
+        const pollOptions = document.querySelectorAll('.pollOption'); // Get all poll options dynamically
+        
+        pollOptions.forEach((optionDiv, index) => {
+            const optionValue = optionDiv.querySelector('input').value.trim();
+            if (optionValue !== '') {
+            options.push(optionValue);
+        }
+                            });
+        
+        if (options.length < 2) {
+            showError('pollOptions', 'Please provide at least 2 poll options!');
+            return;
+        } else {
+            hideError('pollOptions');
+        }
+        
+        const activeDate = document.getElementById('active-date').value;
+        const activeTime = document.getElementById('active-time').value;
+        
+        if (!activeDate || !activeTime) {
+            showError('pollActiveUntil', 'Please specify end date and time.');
+            return;
+        } else {
+            hideError('pollActiveUntil');
+        }
+        
+        const pollData = {
+            Account_Id: "0014W00002aAD6wQAG",
+            Poll_Question: pollQuestion,
+            Poll_Start_Date: new Date().toISOString().split('T')[0],
+            Poll_Start_Time: new Date().toISOString().split('T')[1].split('.')[0],
+            Poll_End_Date: activeDate,
+            Poll_End_Time: activeTime,
+            Active_Status: "true",
+            Poll_Options: options.map((option, index) => ({
+                Poll_Option: option,
+                Sort_Order: index,
+                Active_Status: "true"
+            }))
+        };
+        
+        try {
+            console.log('pollData::::::', pollData);
+            // Show loader before making the API call
+            jQuery(".pollloader").show();
+            
+            fetch('https://anl2h22jc4.execute-api.us-east-2.amazonaws.com/production/poll', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlYWNoZXIuc29sdmVkQHN5c3RlbS51c2VyIiwicm9sZSI6InRlYWNoZXIiLCJpZCI6IjAwM052MDAwMDBKQXk4MUlBRCIsImlhdCI6MTczMzQwNjAyNn0.Hnkzas3BJpT2bjeUAtMSNJxgaIdxBlebp29YlmgOoFU',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(pollData)
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response statusText:', response.statusText);
+                
+                // Hide loader after the response is received
+                jQuery(".pollloader").hide();
+                
+                if (!response.ok) return response.text().then(errorDetails => {
+                throw new Error(`Failed to save poll:::: ${response.status} - ${response.statusText}: ${errorDetails}`);
+        });
+        
+            // Hide Add Poll button and show Edit Poll button
+            const addPollButton = document.querySelectorAll('#addPollButton');
+        
+            // Update text of the addPollButton
+            if (addPollButton) {
+                addPollButton[1].innerText = 'Edit Poll';
+            }
+                            
+        closePollPopup();
+        hideError('pollQuestion');
+        hideError('pollOptions');
+        hideError('pollActiveUntil');
+        
+        return response.json();  // Parsing response data
+    })
+    .then(data => {
+        console.log('Poll response:', data);
+                        
+        if (data && data.body && data.body.Poll_Question && data.body.Poll_Question.Id) {
+            pollQuestionId = data.body.Poll_Question.Id;
+            console.log('Poll Question ID:', pollQuestionId);
+        } else {
+            console.error('Poll Question ID not found in response:', data);
+        }
+        
+    })
+        .catch(error => {
+        console.error('Error saving poll::::::', error);
+    });
+    } catch (error) {
+        console.error('Error saving poll:', error);
+    }
+    }
+        
+        </script>
+    
+    <apex:sectionHeader title="Push Notification" subtitle="Send bulk push notification" />
+    <apex:form >
+        <apex:pageBlock mode="detail" id="headingMain" title="Send Push Notification">
+            <apex:pageBlockButtons id="cancleButton">
+                <!-- <button onclick="myFunction()">Send</button>  -->
+                <apex:commandButton id="cancleButton" value="Cancel" action="{!Cancel}"/>
+                <button class="btn" id="sendButton" type="button" onclick=" showFieldMandatory()">Send</button>
+                <button class="btn" id="addPollButton" type="button" onclick="showPollPopup()">Add Poll</button>
+            </apex:pageBlockButtons>
+            
+            <div class="mainForm">
+                <div class="error-msg" id="errormsg">
+                    <i class="errorSelectItem fa fa-times-circle"></i>Please select at least one record	
+                </div>
+                <div class="titleDiv">
+                    <label class="mTitle" for="mtitle">Title</label>
+                    <input id="messageTitle" type="text" name="theTitleInput" placeholder="Message title..." oninput="hideError('messageTitle', 'error1')"/>
+                    <span id="error1"></span>
+                </div>
+                
+                <div class="msgDiv">
+                    <label class="mDescription" for="msg">Message</label>
+                    <textarea id="messageBody" type="text" name="theMsgInput" placeholder="Message description..." oninput="hideError('messageBody', 'error2')"></textarea>
+                    <span id="error2"></span>
+                </div>
+                
+                <div class="imgDiv">
+                    <label class="imageURL" for="img">Image</label>
+                    <input id="imageUrl" type="text" name="theImgInput" placeholder="Image URL..."/>
+                </div>
+                
+                <div class="urlDiv">
+                    <label class="launchURL" for="lURL">Launch URL</label>
+                    <input id="launchUrl" type="text" name="theUrlInput" placeholder="Launch URL..."/>
+                </div>
+                
+                <div class="dateAndTimeDiv">
+                    <label for="schedule-time" class="dateAndTime">Schedule Notifiation</label>
+                    <input type="datetime-local" id="schedule-time" name="schedule-time" value="" />
+                    <span id="errorDate"></span>
+                </div>   
+                
+                <div class="pinPushMessage">
+                    <label class="pushMessage" for="pinPushCheckbox">Pin Push Messages</label>
+                    <input id="pinPushCheckbox" type="checkbox" />
+                </div>   
+                
+                <div id="pinDateField" class="pindate">
+                    <h2 class="pinEndDate" style="font-size: 15px;">Select Pin End Date</h2>
+                    <b></b>
+                    <div style="margin-top: 8px;">
+                        <h2 style="font-size: 13px; font-weight: normal;">(Note: Pin will end at 11:59 PM EST on selected date)</h2>
+                    </div>
+                    <input type="date" id="pinPushDate" name="pinPushDate" />
+                </div>
+            </div>
+            
+            <div id="pollPopup">
+                <h1 class="pollHeading">Create Poll</h1>
+                
+                <!-- Poll Question Field -->
+                <div class="pollQuestionDiv" style="margin-bottom: 20px;">
+                    <label for="pollQuestion">Poll Question</label>
+                    <input type="text" id="pollQuestion" placeholder="Enter your poll question" style="width: 100%;" oninput="hideError('pollQuestion')" />
+                    <span id="pollQuestionError" style="color: red; display: none; font-size: small;"></span>
+                </div>
+                
+                <!-- Poll Options and Active Until Container -->
+                <div class="pollMainContainer" style="display: flex; gap: 20px;">
+                    <div id="pollOptions" style="flex: 1;">
+                        <div style="margin-bottom: 8px;">
+                            <h2 style="font-size: 13px; font-weight: bold;">
+                                Options: (Max 5)
+                            </h2>
+                        </div>
+                        <div id="pollOptions">
+                            <div class="pollOption" id="optionDiv1">
+                                <label for="option1">Option 1</label>
+                                <input type="text" id="option1" placeholder="Enter option 1"/>
+                            </div>
+                            <div class="pollOption" id="optionDiv2">
+                                <label for="option2">Option 2</label>
+                                <input type="text" id="option2" placeholder="Enter option 2"/>
+                            </div>
+                        </div>
+                        <button id="addPollOptionButton" type="button" class="pollbtn" onclick="addPollOption()" style="margin-top: 10px;">Add Option</button>
+                        <div id="pollOptionsError" style="color: red; display: none; font-size: small; margin-top: 10px;"></div>
+                    </div>
+                    
+                    <!-- Active Until Fields -->
+                    <div class="activeUntilDiv" style="flex: 1;">
+                        <h2 class="activeUntilText" style="font-size: 14px;">Active Until</h2>
+                        <b></b>
+                        <div style="margin-top: 8px;">
+                            <h2 style="font-size: 13px; font-weight: normal;">(Note: Time Zone for poll is EST)</h2>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 10px; justify-content: space-between;">
+                            <input type="date" id="active-date" class="activeDateTime" name="active-date" />
+                            <input type="time" id="active-time" class="activeDateTime" name="active-time" step="1" />
+                        </div>
+                        <div id="pollActiveUntilError" style="color: red; display: none; font-size: small; margin-top: 10px;"></div>
+                    </div>
+                </div>
+                
+                <!-- Popup Actions -->
+                <div style="margin-top:20px; text-align:right;">
+                    <button type="button" class="pollbtn" onclick="closePollPopup()">Cancel</button>
+                    <button type="button" class="pollbtn" onclick="savePoll()">Save Poll</button>
+                </div>
+            </div>
+            
+        </apex:pageBlock>
+    </apex:form>
+    
+    <script>
+    if(ids!=""){
+        document.getElementById('errormsg').style.display = 'none';
+    }
+    </script>
+</apex:page>
